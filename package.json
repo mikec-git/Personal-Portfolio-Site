@@ -1,0 +1,30 @@
+{
+  "name": "mike-site",
+  "version": "1.0.0",
+  "description": "Mike's portfolio website",
+  "main": "app.js",
+  "scripts": {
+    "watch:sass": "node-sass ./public/sass/main.scss ./public/css/style.css -w",
+    "compile:sass": "node-sass ./public/sass/main.scss ./public/css/style.comp.css",
+    "prefix:css": "postcss -u autoprefixer -b \"last 10 versions\" ./public/css/style.comp.css -o ./public/css/style.prefix.css",
+    "compress:css": "node-sass ./public/css/style.prefix.css ./public/css/style.css --output-style compressed",
+    "build:css": "npm-run-all compile:sass prefix:css compress:css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikec-git/Personal-Portfolio-Site.git"
+  },
+  "author": "Mike Choi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mikec-git/Personal-Portfolio-Site/issues"
+  },
+  "homepage": "https://github.com/mikec-git/Personal-Portfolio-Site#readme",
+  "devDependencies": {
+    "autoprefixer": "^9.1.5",
+    "concat": "^1.0.3",
+    "node-sass": "^4.9.3",
+    "npm-run-all": "^4.1.3",
+    "postcss-cli": "^6.0.0"
+  }
+}
