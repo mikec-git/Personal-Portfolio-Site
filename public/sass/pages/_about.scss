@@ -1,0 +1,34 @@
+.about {
+    max-width: $max-content-width;
+    margin: 0 auto;
+    display: flex;
+
+
+    &__caption {    
+        position: absolute;
+        left: 12rem;
+        top: 39.5rem;    
+    
+        span:nth-child(odd) { text-shadow: -3rem -1rem .3rem rgba(0,0,0,.3); }    
+        span:nth-child(even) { text-shadow: -3rem -.5rem .3rem rgba(0,0,0,.3); }    
+    
+        &--1 {
+            transform: skewY(-15deg) skewX(-5deg);
+        }
+    
+        &--2 {
+            transform: translateY(-6rem) skewY(-15deg) skewX(30deg);
+        }
+    
+        &--3 {
+            transform: translateY(-16rem) skewY(-15deg) skewX(-5deg);
+        }
+    
+        &--4 {
+            transform: translateY(-21rem) skewY(-15deg) skewX(30deg);
+        }
+    }
+
+    
+    
+}

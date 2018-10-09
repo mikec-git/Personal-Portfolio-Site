@@ -1,0 +1,26 @@
+// PARTIALS IMPORTED
+
+// ABSTRACTS
+@import './abstracts/mixins';
+@import './abstracts/variables';
+@import './abstracts/utilities';
+
+// BASE
+@import './base/animations';
+@import './base/base';
+@import './base/typography';
+
+// COMPONENTS
+@import './components/button';
+@import './components/caption';
+
+// LAYOUT
+@import './layout/footer';
+@import './layout/header';
+@import './layout/loading';
+@import './layout/navigation';
+
+// PAGES
+@import './pages/about';
+@import './pages/home';
+@import './pages/skills';

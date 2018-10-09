@@ -1,0 +1,23 @@
+// FLASH CONTENT
+.character-flash {
+    animation: characterFlash 1750ms infinite cubic-bezier(.74,.01,1,.93) !important;
+    display: inline-block !important;
+    color: $color-primary-red !important;
+}
+
+// TRANSFORMS
+.u-rotate-270 {
+    transform: rotateZ(270deg) !important;
+    transform-origin: left !important;
+}
+
+// TEXT
+.u-center-text { text-align: center !important; }
+
+.u-mb-smallest { margin-bottom: 3rem !important; }
+.u-mb-smaller { margin-bottom: 5rem !important; }
+.u-mb-small { margin-bottom: 8rem !important; }
+.u-mb-medium { margin-bottom: 12rem !important; }
+.u-mb-large { margin-bottom: 20rem !important; }
+
+.u-ml-huge { margin-left: 50rem !important; }

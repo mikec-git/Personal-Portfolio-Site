@@ -1,0 +1,47 @@
+.header {
+    background-color: $color-primary-purple;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: max-content;
+    grid-template-rows: repeat(3, min-content);
+    justify-content: center;
+    align-content: center;
+    justify-items: center;
+    position: relative;
+    
+    & > * {
+        max-width: $max-content-width;
+    }
+
+    &__logo-box {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 3rem;
+    }
+    
+    &__logo {
+        display: block;
+        width: 100%;
+    }
+
+    &__name {
+        position: absolute;
+        top: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+        line-height: 1;
+        letter-spacing: 1rem;
+        font-size: 6rem;
+        text-align: center;
+        font-weight: bold;
+
+        &--first {
+        }
+
+        &--last {
+            transform: rotateZ(180deg);
+            margin-left: -1.5rem;
+            color: $color-primary-red;
+        }
+    }
+}

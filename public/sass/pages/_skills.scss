@@ -1,0 +1,120 @@
+.skills {
+    max-width: $max-content-width;
+    margin: 0 auto;
+    // display: grid;
+    // grid-template-columns: repeat(2, minmax(min-content, max-content));
+    // // grid-template-rows: repeat(8, min-content);
+    // grid-auto-rows: min-content;
+    // justify-content: center;
+    // grid-row-gap: 3rem;
+    // position: relative;
+
+    &__web {
+        // grid-row: 1 / 2;
+        // grid-column: 2 / 3;
+        // display: grid;
+        // grid-template-columns: repeat(5, min-content);
+        // grid-auto-rows: min-content;
+        display: flex;
+        justify-content: center;
+    }
+
+    &__software {
+        // grid-row: 2 / 3;
+        // grid-column: 1 / 2;
+        // display: grid;
+        // grid-template-columns: repeat(2, min-content);
+        display: flex;
+        justify-content: center;
+    }
+
+    &__design {
+        // grid-row: 5 / 6;
+        // justify-self: end;
+        // display: grid;
+        // grid-template-columns: repeat(5, min-content);
+        display: flex;
+        justify-content: center;
+    }
+
+    &__heading {
+        // align-self: center;
+        
+        &--web {
+            text-align: center;
+            // grid-row: 1 / 2;
+            // grid-column: 1 / 2;
+        }
+
+        &--software {
+            text-align: center;
+            // grid-row: 2 / 3;
+            // grid-column: 2 / 3;
+        }
+
+        &--design {
+            text-align: center;
+            // grid-row: 3 / 5;
+            // justify-self: end;
+        }
+    }
+
+    &__item {
+        width: $skills-icon-size;
+        height: $skills-icon-size;
+        padding: calc(#{$skills-icon-size} * .9);
+        position: relative;
+        display: grid;
+        justify-content: center;
+        align-content: center;
+        border-radius: 50%;
+        box-shadow: 0 1rem 5rem rgba(0, 0, 0, .5);
+        background-color: rgba(#fff, 1);
+        margin: 2rem;
+        overflow: hidden;
+        transition: all 300ms;
+
+        &:hover {
+            background-color: rgba($color-grey-light, 1);
+        }
+    }
+    
+    &__item:hover &__icon {
+        filter: blur(.4rem) brightness(60%);
+        transform: scale(1.04) translateY(-.3rem);
+    }
+
+    &__item:hover &__caption {
+        opacity: 1;
+        color: #fff;
+        top: 50%;
+    }
+    
+    &__icon {
+        width: $skills-icon-size;
+        height: $skills-icon-size;
+        transition: all 300ms ease-out;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+
+    &__caption {
+        display: inline-block;
+        position: absolute;
+        top: -100%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: all 300ms;
+    }
+
+    &__text {
+        font-size: $huge-font-size;
+        // position: absolute;
+        // bottom: 10%;
+        // left: 50%;
+        // transform: translate(-50%, -50%) perspective(500px) scale3d(2, 0.7, 0.2) translateZ(100px);
+        width: 100%;
+        text-align: center;
+    }
+}

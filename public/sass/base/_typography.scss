@@ -1,0 +1,81 @@
+// FONTS
+@font-face {
+    font-family: 'product sans';
+    src: url('../fonts/Product_Sans/product_sans_regular.woff') format('woff'),
+         url('../fonts/Product_Sans/product_sans_regular.woff2') format('woff2');
+}    
+
+@font-face {
+    font-family: 'product sans';
+    src: url('../fonts/Product_Sans/product_sans_bold.woff') format('woff'),
+         url('../fonts/Product_Sans/product_sans_bold.woff2') format('woff2');
+    font-weight: bold;
+}
+
+body {
+    font-family: 'product sans';
+    font-size: 2rem;
+    font-weight: normal;
+    line-height: 1.6;
+}
+
+.heading-1 {
+    font-size: 14rem;
+    font-weight: bold;
+    line-height: 1;
+    letter-spacing: 1rem;
+}
+
+.heading-2 {
+    font-size: 6rem;
+    font-weight: normal;
+    line-height: 1;
+}
+
+.heading-3 {
+    font-size: 4rem;
+    font-weight: normal;
+    line-height: 1;
+}
+
+.background-text {
+    font-size: 9rem;
+    line-height: 1;
+    color: rgba(0, 0, 0, .2);
+    position: absolute;
+    top: 35%;
+    right: 5rem;
+}
+
+.fine-print {
+    font-size: 2rem;
+    display: block;
+}
+
+.column-text {
+    display: grid;
+    justify-items: end;
+    width: 100%;
+
+    & > * {
+        width: 50%;
+        letter-spacing: .25rem;
+
+        &:not(:last-child) {
+            margin-bottom: $margin-small;
+        }
+    }
+    
+    &--main {
+        font-size: 10rem;
+        text-transform: uppercase;
+        line-height: 1.3;
+        letter-spacing: .75rem;
+    }
+
+    &--secondary {
+    }
+    
+    &--right { justify-self: end; }
+    &--left { justify-self: start; }    
+}

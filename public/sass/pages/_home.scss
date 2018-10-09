@@ -1,0 +1,35 @@
+.section-about {
+    // -webkit-clip-path: polygon(0 0, 100% 0, 100% 97%, 55% 97%, 50% 100%, 45% 97%, 0 97%);
+    // clip-path: polygon(0 0, 100% 0, 100% 97%, 55% 97%, 50% 100%, 45% 97%, 0 97%);
+    
+    // background-image: linear-gradient($about-angle, 
+                                        // $color-secondary-red 0%, 
+                                        // $color-secondary-red 25%,
+                                        // $color-primary-red 55%, 
+                                        // $color-secondary-red 55%, 
+                                        // $color-secondary-red 60%, 
+                                        // $color-primary-red 100%);
+    padding: 40rem 0 70rem;
+    position: relative;
+}
+
+.section-projects {
+    background-color: $color-primary-pink;
+    padding: 50rem 0 100rem;
+    margin-top: -15vh;
+}
+
+.section-skills {
+    background-color: $color-primary-cyan;
+    padding: 50rem 0;
+}
+
+.section-testimonials {
+    background-color: $color-primary-green;
+    padding: 50rem 0;
+}
+
+.section-contact {
+    background-color: $color-primary-purple;
+    padding: 50rem 0;
+}

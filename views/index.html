@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../public/css/style.css">
     <title>It's Mike | Portfolio</title>
 </head>
 <body>
@@ -16,27 +17,186 @@
     </div>
 
     <header class="header">
-        HEADER
+        <div class="header__logo-box">
+            <img src="../public/img/logo.png" alt="Logo" class="header__logo">
+        </div>
+        <div class="header__name">
+            <p class="header__name--first">Mike</p>
+            <p class="header__name--last">Choi</p>
+        </div>
+        <h1 class="heading-1">Hello<span class="character-flash">_</span></h1>
+        <a href="#" class="btn btn-arrow-down"></a>
     </header>
     
     <main class="main">
+        <!-- ABOUT SECTION -->
         <section class="section-about">
-            ABOUT SECTION
+            <div class="u-center-text u-mb-large">
+                <h1 class="heading-1">WHO</h1>
+            </div>
+            <!-- <p class="background-text">Not your average Joe...</p> -->
+            <div class="about">
+                <!-- <div class="caption about__caption">
+                    <p class="caption__text">
+                        <span class="caption__text--1 about__caption--1">An avid coffee drinker,</span>
+                        <span class="caption__text--2 about__caption--2">that occasionally likes to lift heavy things.</span>
+                        <span class="caption__text--3 about__caption--3">An engineering physicist on paper,</span>
+                        <span class="caption__text--4 about__caption--4">but a &#10092;coder&#10093; at heart.</span>                        
+                    </p>
+                </div> -->
+                <!-- About main content -->
+                <div class="column-text">
+                    <p class="column-text--main">
+                        I design things and bring them to life.
+                    </p>
+                    <p class="column-text--secondary">
+                        I'm a self-taught web developer who loves all things coding<sup>&#10033;</sup>.
+                        <span class="fine-print">
+                            <sup>&#10033;</sup> and pizza
+                        </span>
+                    </p>
+                    <p class="column-text--secondary column-text--left">
+                        Since graduating from Queen's University with a degree in engineering physics, I soon realized that pursuing a career in that field wasn't for me.
+                    </p>                    
+                    <p class="column-text--secondary column-text--left">
+                        In combining my creative mindset, eye for detail, and love for tech, I inevitably fell down the rabbit hole of design and development.
+                    </p>                    
+                    <p class="column-text--secondary">
+                        Driven by creative challenges, I'm always looking to bring about innovative and fresh designs in my work. My attention to detail and love for coffee also helps...I think.
+                    </p>
+                    <p class="column-text--secondary">
+                        New experiences and challenges are kinda my thing, so let's talk!
+                    </p>                    
+                </div>
+            </div>
         </section>
+
         <section class="section-projects">
-            PROJECTS SECTION
+            <div class="u-center-text u-mb-large">
+                <h1 class="heading-1">WHAT</h1>
+            </div>
         </section>
+
+        <!-- SECTION SKILLS -->
         <section class="section-skills">
-            SKILLS SECTION
+            <div class="u-center-text u-mb-large">
+                <h1 class="heading-1">SKILLS</h1>
+            </div>
+            <div class="skills">
+                <!-- WEB DEVELOPMENT -->
+                <h3 class="heading-3 skills__heading--web">Web Development</h3>
+                <div class="skills__web">
+                    <figure class="skills__item">
+                        <svg class="skills__icon">
+                            <use xlink:href="../public/img/svg/tech-sprites.svg#icon-html5"></use>
+                        </svg>
+                        <figcaption class="skills__caption">
+                            HTML5
+                        </figcaption>
+                    </figure>
+                    <figure class="skills__item">
+                        <svg class="skills__icon">
+                            <use xlink:href="../public/img/svg/tech-sprites.svg#icon-css3"></use>
+                        </svg>
+                        <figcaption class="skills__caption">
+                            CSS3
+                        </figcaption>
+                    </figure>
+                    <figure class="skills__item">
+                        <svg class="skills__icon">
+                            <use xlink:href="../public/img/svg/tech-sprites.svg#icon-mongodb"></use>
+                        </svg>
+                        <figcaption class="skills__caption">
+                            MongoDB
+                        </figcaption>
+                    </figure>
+                    <figure class="skills__item">
+                        <svg class="skills__icon">
+                            <use xlink:href="../public/img/svg/tech-sprites.svg#icon-git"></use>
+                        </svg>
+                        <figcaption class="skills__caption">
+                            Git
+                        </figcaption>
+                    </figure>                        
+                    <figure class="skills__item">
+                        <svg class="skills__icon">
+                            <use xlink:href="../public/img/svg/tech-sprites.svg#icon-github"></use>
+                        </svg>
+                        <figcaption class="skills__caption">
+                            Github
+                        </figcaption>
+                    </figure>  
+                </div>
+                <!-- SOFTWARE SKILLS -->
+                <h3 class="heading-3 skills__heading--software">Software</h3>
+                <div class="skills__software">
+                    <figure class="skills__item">
+                        <svg class="skills__icon">
+                            <use xlink:href="../public/img/svg/tech-sprites.svg#icon-javascript"></use>
+                        </svg>
+                        <figcaption class="skills__caption">
+                            JavaScript
+                        </figcaption>
+                    </figure>                  
+                    <figure class="skills__item">                        
+                        <img src="../public/img/svg/nodejs.svg" alt="Node.js logo" class="skills__icon">                        
+                        <figcaption class="skills__caption">
+                            Node.js
+                            Express.js
+                        </figcaption>
+                    </figure>                   
+                    <figure class="skills__item">
+                        <svg class="skills__icon">
+                            <use xlink:href="../public/img/svg/tech-sprites.svg#icon-python"></use>
+                        </svg>
+                        <figcaption class="skills__caption">
+                            Python
+                        </figcaption>
+                    </figure>
+                    <figure class="skills__item">
+                        <img class="skills__icon" src="../public/img/svg/csharp.svg" alt="C# Logo">
+                        <figcaption class="skills__caption">
+                            C#/.NET
+                        </figcaption>
+                    </figure>
+                    <figure class="skills__item">
+                        <img class="skills__icon" src="../public/img/svg/matlab.svg" alt="Matlab Logo">
+                        <figcaption class="skills__caption">
+                            Matlab
+                        </figcaption>
+                    </figure>
+                </div>
+                <!-- UI/UX DESIGN -->
+                <h3 class="heading-3 skills__heading--design">UI/UX Design</h3>
+                <div class="skills__design">
+                    <figure class="skills__item">
+                        <svg class="skills__icon">
+                            <use xlink:href="../public/img/svg/tech-sprites.svg#icon-adobeillustrator"></use>
+                        </svg>
+                        <figcaption class="skills__caption">
+                            Illustrator
+                        </figcaption>
+                    </figure>
+                    <figure class="skills__item">
+                        <svg class="skills__icon">
+                            <use xlink:href="../public/img/svg/tech-sprites.svg#icon-adobephotoshop"></use>
+                        </svg>
+                        <figcaption class="skills__caption">
+                            Photoshop
+                        </figcaption>
+                    </figure>
+                </div>
+                <!-- SKILLS DESCRIPTION -->
+                <p class="skills__text">
+                    However, my greatest strength is my enthusiasm to keep up-to-date with modern technologies.
+                </p>
+            </div>
         </section>
-        <section class="section-education">
-            EDUCATION SECTION
-        </section>
-        <section class="section-testimonials">
-            TESTIMONIALS SECTION
-        </section>
+
         <section class="section-contact">
-            CONTACT SECTION
+            <div class="u-center-text">
+                <h1 class="heading-1">HOW</h1>
+            </div>
         </section>
     </main>
 
