@@ -268,6 +268,10 @@ body {
   align-content: center;
   justify-items: center;
   align-items: center; }
+  .header__bg {
+    width: inherit;
+    height: 100%;
+    overflow: hidden; }
   .header__logo-box {
     display: block;
     width: 35rem;
