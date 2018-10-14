@@ -1,0 +1,28 @@
+// Background of the scrollbar
+body::-webkit-scrollbar {
+    width: .8rem;
+    height: .8rem;
+    background-color: $color-grey-light;    
+}
+
+// Empty space below the progress bar
+body::-webkit-scrollbar-track,
+// Exposed layer of track
+body::-webkit-scrollbar-track-piece,
+// Directional buttons
+body::-webkit-scrollbar-button {
+    display: none;
+}
+
+// Draggable part of scrollbar that grows and shrinks
+body::-webkit-scrollbar-thumb {
+    background-color: $color-grey-dark;
+    border-radius: 100px;
+}
+
+// Corner of page
+body::-webkit-scrollbar-corner,
+// Resizer on corner
+body::-webkit-resizer {
+    background-color: $color-grey-dark;
+}

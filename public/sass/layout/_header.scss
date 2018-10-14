@@ -1,47 +1,82 @@
 .header {
-    background-color: $color-primary-purple;
     height: 100vh;
+    width: 100%;
+    position: relative;
+    background-color: $color-grey-darker;
+
     display: grid;
-    grid-template-columns: max-content;
-    grid-template-rows: repeat(3, min-content);
     justify-content: center;
     align-content: center;
     justify-items: center;
-    position: relative;
-    
-    & > * {
-        max-width: $max-content-width;
-    }
+    align-items: center;
 
     &__logo-box {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 3rem;
+        display: block;
+        width: 35rem;
+        height: 35rem;
+        @include centerAbsolute;
+        z-index: 1;
+        perspective: 20rem;
+    }
+
+    &__logo {
+        animation: logoGlow 5500ms ease-in-out infinite;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+
+    &__title {
+        width: 100%;
+        font-size: 6rem;
+        text-transform: uppercase;
+        text-align: center;
+        z-index: 2;
+        position: relative;
+        top: 6rem;
+        letter-spacing: 0rem;
+        filter: invert(1);
+    }
+
+    &__subtitle {
+        width: 100%;
+        font-size: 2.5rem;
+        text-transform: uppercase;
+        text-align: center;
+        z-index: 2;
+        position: relative;
+        top: 6rem;
+        letter-spacing: 0rem;
+        font-weight: 600;
+        filter: invert(1);
     }
     
-    &__logo {
-        display: block;
-        width: 100%;
-    }
-
-    &__name {
-        position: absolute;
-        top: 5%;
-        left: 50%;
-        transform: translateX(-50%);
-        line-height: 1;
-        letter-spacing: 1rem;
-        font-size: 6rem;
-        text-align: center;
-        font-weight: bold;
-
-        &--first {
+    &__letter {
+        display: inline-block;
+        color: black;
+        
+        &--space {
+            font-size: 0rem;
         }
 
-        &--last {
-            transform: rotateZ(180deg);
-            margin-left: -1.5rem;
-            color: $color-primary-red;
+        &--M {
+        }        
+        
+        &--I {
+        }
+        
+        &--K {
+        }
+        
+        &--E {
+        }
+
+        &--C {
+        }
+
+        &--H {
+        }
+
+        &--O {
         }
     }
 }

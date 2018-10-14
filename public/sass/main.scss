@@ -11,14 +11,17 @@
 @import './base/typography';
 
 // COMPONENTS
-@import './components/button';
-@import './components/caption';
+@import './components/background-noise';
+@import './components/column-text';
+@import './components/logo';
+@import './components/thumbnail';
 
 // LAYOUT
 @import './layout/footer';
 @import './layout/header';
 @import './layout/loading';
 @import './layout/navigation';
+@import './layout/scrollbar';
 
 // PAGES
 @import './pages/about';
