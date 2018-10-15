@@ -1,4 +1,7 @@
 .noise {
+    width: 100%;
+    height: 100%;
     @include centerAbsolute;
     z-index: 0;
+    display: block;
 }

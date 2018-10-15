@@ -1,6 +1,7 @@
 // Background noise canvas image
 (function noise() {
-    window.addEventListener("DOMContentLoaded", init, false);
+    window.addEventListener('DOMContentLoaded', init, false);
+    window.addEventListener('resize', reset, false);
 
     let canvas,
         ctx,
@@ -8,27 +9,37 @@
         windowHeight;
     
     // Counter for looping over noiseData
-    let imageFrame = 0;
-    let numOfFrames = 10;
+    let imageFrame  = 0,
+        numOfFrames = 10;
+
     // Array to keep numOfFrames number of rendered images
-    let noiseData = [];
+    let noiseData;
+
+    // Loop timeout ID
+    let timeoutID,
+        resizeTimeoutID;
     
     function init(e) {
         e = e || window.event;
         
         canvas = document.querySelector('.noise');
         ctx = canvas.getContext('2d', {alpha: true});
-
+        
         setupCanvas();
     }
     
     function setupCanvas() {
         windowWidth = document.documentElement.clientWidth;
         windowHeight = document.documentElement.clientHeight;
-
+        
         canvas.width = windowWidth;
         canvas.height = windowHeight;
 
+        ctx.canvas.width = windowWidth;
+        ctx.canvas.height = windowHeight;
+        
+        noiseData = [];
+        
         generateImageDataArray();
     }
     
@@ -59,13 +70,27 @@
     }
 
     function runLoop() {
+        // Loops imagedata from array back
         imageFrame = (imageFrame < numOfFrames-1) ? imageFrame + 1 : 0;
 
         ctx.putImageData(noiseData[imageFrame], 0, 0);
 
-        requestAnimationFrame(runLoop);
+        // Gives breathing room between each loop refresh
+        timeoutID = setTimeout(() => {
+            requestAnimationFrame(runLoop);
+        }, 70);
+        // console.log(timeoutID);
+        // clearTimeout(timeoutID);
     }
 
+    function reset() {
+        clearTimeout(resizeTimeoutID);
 
+        // Refreshes new image background after set timeout
+        resizeTimeoutID = setTimeout(() => {
+            clearTimeout(timeoutID);
+            setupCanvas();            
+        }, 100);
+    }
 
 })();
