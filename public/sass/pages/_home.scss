@@ -1,5 +1,5 @@
 .section-about {
-    padding: 15rem 5rem 15rem;
+    padding: 15rem 5rem;
     height: 100%;
     position: relative;
     background-color: rgb(31, 31, 31);
@@ -9,24 +9,18 @@
 .section-projects {
     background-color: rgb(31, 31, 31);
     color: white;
-    padding: 50rem 0 50rem;
-    position: relative;
-    z-index: 9;
+    padding: 20rem 0;
 }
 
 .section-skills {
     background-color: rgb(31, 31, 31);
 
-    padding: 30rem 0;
-    position: relative;
-    // z-index: 20;
+    padding: 20rem 0;
 }
 
 .section-contact {
     background-color: rgb(31, 31, 31);
 
     color: black;
-    padding: 50rem 0;
-    position: relative;
-    // z-index: 30;
+    padding: 20rem 0;
 }

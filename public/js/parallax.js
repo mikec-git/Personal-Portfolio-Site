@@ -9,8 +9,8 @@ function init(e) {
 
 function parallax(e) {
     e = e || window.event; // old IE support
-    const mouseX = e.pageX;
-    const mouseY = e.pageY;
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
     const viewportX = window.innerWidth;
     const viewportY = window.innerHeight;
     
@@ -37,6 +37,8 @@ function parallaxReset() {
 function mouseParallax(element, viewportX, viewportY, mouseX, mouseY, offsetRotate, offsetTranslate) {
     translateX = (mouseX - viewportX/2) * offsetTranslate;
     translateY = (mouseY - viewportY/2) * offsetTranslate;
+
+    console.log(mouseY);
 
     rotateX = -(mouseY - viewportY/2) / (viewportY/2) * 45 * offsetRotate;
     rotateY = (mouseX - viewportX/2) / (viewportX/2) * 45 * offsetRotate;

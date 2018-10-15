@@ -1,23 +1,22 @@
 // Background noise canvas image
 (function noise() {
     window.addEventListener('DOMContentLoaded', init, false);
-    window.addEventListener('resize', reset, false);
-
+    
     let canvas,
-        ctx,
-        windowWidth,
-        windowHeight;
+    ctx,
+    windowWidth,
+    windowHeight;
     
     // Counter for looping over noiseData
     let imageFrame  = 0,
-        numOfFrames = 10;
-
+    numOfFrames = 10;
+    
     // Array to keep numOfFrames number of rendered images
     let noiseData;
-
+    
     // Loop timeout ID
     let timeoutID,
-        resizeTimeoutID;
+    resizeTimeoutID;
     
     function init(e) {
         e = e || window.event;
@@ -26,6 +25,7 @@
         ctx = canvas.getContext('2d', {alpha: false});
         
         setupCanvas();
+        window.addEventListener('resize', reset, false);
     }
     
     function setupCanvas() {
@@ -57,12 +57,12 @@
         let length = buffer32.length;
         
         for(let i = 0; i < length; i++) {
-            // Half of the data, at random, will be opaque black
+            // Half of the data, at random, will be black
             if(Math.random() < 0.5) {
-                buffer32[i] = 0xff000000;
+                // buffer32[i] = 0x11060606;
+                buffer32[i] = 0x11050505;
             } else {
-                // Set remainder to be original bg color since alpha:false
-                buffer32[i] = 0xff1f1f1f;
+                buffer32[i] = 0x110e0e0e;
             }
         }
         
@@ -88,7 +88,7 @@
         resizeTimeoutID = setTimeout(() => {
             clearTimeout(timeoutID);
             setupCanvas();            
-        }, 50);
+        }, 10);
     }
 
 })();
