@@ -23,7 +23,7 @@
         e = e || window.event;
         
         canvas = document.querySelector('.noise');
-        ctx = canvas.getContext('2d', {alpha: true});
+        ctx = canvas.getContext('2d', {alpha: false});
         
         setupCanvas();
     }
@@ -35,9 +35,6 @@
         canvas.width = windowWidth;
         canvas.height = windowHeight;
 
-        ctx.canvas.width = windowWidth;
-        ctx.canvas.height = windowHeight;
-        
         noiseData = [];
         
         generateImageDataArray();
@@ -63,6 +60,9 @@
             // Half of the data, at random, will be opaque black
             if(Math.random() < 0.5) {
                 buffer32[i] = 0xff000000;
+            } else {
+                // Set remainder to be original bg color since alpha:false
+                buffer32[i] = 0xff1f1f1f;
             }
         }
         
@@ -78,9 +78,7 @@
         // Gives breathing room between each loop refresh
         timeoutID = setTimeout(() => {
             requestAnimationFrame(runLoop);
-        }, 70);
-        // console.log(timeoutID);
-        // clearTimeout(timeoutID);
+        }, 40);
     }
 
     function reset() {
@@ -90,7 +88,7 @@
         resizeTimeoutID = setTimeout(() => {
             clearTimeout(timeoutID);
             setupCanvas();            
-        }, 100);
+        }, 50);
     }
 
 })();
