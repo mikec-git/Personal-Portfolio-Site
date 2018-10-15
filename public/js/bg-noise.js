@@ -55,11 +55,11 @@
             }
         }
         
-        noiseData.push[idata];
+        noiseData.push(idata);
     }
 
     function runLoop() {
-        imageFrame = (imageFrame >= numOfFrames) ? 0 : imageFrame++;
+        imageFrame = (imageFrame < numOfFrames-1) ? imageFrame + 1 : 0;
 
         ctx.putImageData(noiseData[imageFrame], 0, 0);
 
