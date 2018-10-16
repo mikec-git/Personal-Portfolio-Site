@@ -110,7 +110,7 @@ mathProto.prototype.clamp = function(num, min, max) {
                         rotationY: rotY
                     },
                     ease: Power2.easeOut,
-                    overwrite: 0
+                    overwrite: 2
                 });
             }
         })
@@ -161,7 +161,7 @@ mathProto.prototype.clamp = function(num, min, max) {
                             rotationY: rotY
                         },
                         ease: Power0.easeOut,
-                        overwrite: 2
+                        overwrite: 0
                     });
                 }
             }
@@ -172,31 +172,16 @@ mathProto.prototype.clamp = function(num, min, max) {
     function reset() {
         parallaxElements.forEach(element => {
             console.log("ran");
-            TweenMax.to(element.el, 1, {
+            TweenMax.to(element.el, .75, {
                 x: translateXPassive,
                 y: translateYPassive,
                 directionalRotation: {
                     rotationX: rotateXPassive + '_short',
                     rotationY: rotateYPassive + '_short'
                 },
-                ease: Expo.easeOut,
-                overwrite: 1
+                ease: Quad.easeOut,
+                overwrite: 3
             });
-        });
-    };
-
-    // RESET PARALLAX
-    function resetParallax(element) {
-        // Returns transform values to original before active transform (including any passive scroll transforms)
-        TweenLite.to(element, 1, {
-            x: originalTranslation.X + translateXPassive,
-            y: originalTranslation.Y  + translateYPassive,
-            directionalRotation: {
-                rotationX: originalRotation.X + rotateXPassive,
-                rotationY: originalRotation.Y + rotateYPassive
-            },
-            ease: Quad.easeOut,
-            overwrite: 0
         });
     };
 
