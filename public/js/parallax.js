@@ -39,6 +39,9 @@ mathProto.prototype.RAD_to_DEG = function(){
         translateXPassive,
         translateYPassive;
     
+    let translateXOld,
+        translateYOld;
+    
     // Original position before active transform
     let originalRotation = [],
         originalTranslation = [];
@@ -122,21 +125,25 @@ mathProto.prototype.RAD_to_DEG = function(){
     // SCROLL MOVEMENT PARALLAX
     function scrollParallax() {
         parallaxElements.forEach(element => {
+            // Comparison with old values
+            translateYOld = translateYPassive;
+            translateXOld = translateXPassive;
+
             // Rotate Amount
-            // rotateXPassive = -scroll.X * offsetRotateXPassive + '_short';
-            // rotateYPassive = scroll.Y * offsetRotateYPassive + '_short';
-            let translateYOld = translateYPassive;
+            rotateXPassive = -scroll.X * element.offsetRotPassiveX + '_short';
+            rotateYPassive = scroll.Y * element.offsetRotPassiveY + '_short';
             
             // Mouse translate Amount
             translateXPassive = scroll.X * element.offsetTransPassiveX;
             translateYPassive = scroll.Y * element.offsetTransPassiveY;
-            if(translateYOld !== translateYPassive){
+
+            if(translateYOld !== translateYPassive || translateXOld !== translateXPassive){
                 TweenMax.to(element.el, 0, {
                     x: translateXPassive,
                     y: translateYPassive,
                     directionalRotation: {
-                        // rotationX: rotateXPassive + originalRotation.X,
-                        // rotationY: rotateYPassive + originalRotation.Y
+                        rotationX: rotateXPassive + originalRotation.X,
+                        rotationY: rotateYPassive + originalRotation.Y
                     },
                     ease: Power0.easeOut,
                     overwrite: 'all'
