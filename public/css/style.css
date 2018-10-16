@@ -301,7 +301,7 @@ body {
     letter-spacing: 0rem;
     text-transform: uppercase;
     text-align: center;
-    position: fixed;
+    position: absolute;
     left: 50vw;
     transform: translate(-50%, -50%);
     filter: invert(1); }

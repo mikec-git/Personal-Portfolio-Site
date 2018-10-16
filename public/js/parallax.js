@@ -4,15 +4,13 @@
     const math = new mathProto();
     
     // All parallax elements
-    let parallaxElementsList = document.querySelectorAll('.parallax'),
-        parallaxElements = [];
+    let parallaxElementsList    = document.querySelectorAll('.parallax'),
+        parallaxElements        = [];    
     
-    // Mouse position relative to viewport
-    let mouse = { x: window.clientX, y: window.clientY };    
-    // Document position
-    let scroll = { x: window.pageXOffset, y: window.pageYOffset };
-    // Viewport width and height
-    let viewport = {};
+    let mouse           = { x: window.clientX, y: window.clientY },         // Mouse position relative to viewport    
+        scroll          = { x: window.pageXOffset, y: window.pageYOffset }, // Document position    
+        viewport        = {},                                               // Viewport width and height    
+        documentHeight  = document.body.clientHeight;                       // Entire document height
     
     // Transform values
     let rotate          = {},
@@ -24,14 +22,13 @@
     
     // INIT
     function init() {
-        parallaxElementsList.forEach(element => {
-            let rotation, translation, scale,
-                offsetTransPassiveX, offsetTransPassiveY,
-                offsetRotPassiveX, offsetRotPassiveY,
-                offsetScalePassiveX, offsetScalePassiveY;
+        let rotation, translation, scale,
+            offsetTransPassiveX, offsetTransPassiveY,
+            offsetRotPassiveX, offsetRotPassiveY,
+            offsetScalePassiveX, offsetScalePassiveY;
 
-            // Get initial positions of element
-            ({rotation, translation, scale} = decomposeMatrix(element));
+        parallaxElementsList.forEach(element => {
+            ({rotation, translation, scale} = decomposeMatrix(element)); // Get initial positions of element
             
             if(element.dataset.parallaxRotatePassive) {
                 [offsetRotPassiveX, offsetRotPassiveY] = regexSeparation(element.dataset.parallaxRotatePassive);
@@ -62,9 +59,7 @@
                 offsetTransPassiveX: Number(offsetTransPassiveX),
                 offsetTransPassiveY: Number(offsetTransPassiveY),
                 offsetScalePassiveX: Number(offsetScalePassiveX),
-                offsetScalePassiveY: Number(offsetScalePassiveY),
-                
-                offsetTransPassiveYPow: Number(element.dataset.parallaxTranslatePassiveYPow)
+                offsetScalePassiveY: Number(offsetScalePassiveY)
             });
         });
 
@@ -102,39 +97,50 @@
                 calculatePassive(element);
                 calculateActive(element);                
                 calculateTotal();
-
-                TweenMax.to(element.el, 1, {
-                    x: totalTransform.translateX,
-                    y: totalTransform.translateY,
-                    directionalRotation: {
-                        rotationX: totalTransform.rotateX,
-                        rotationY: totalTransform.rotateY
-                    },
-                    scaleX: totalTransform.scaleX,
-                    scaleY: totalTransform.scaleY,
-                    ease: Power2.easeOut,
-                    overwrite: 0
-                });
+                
+                if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y) {
+                    TweenMax.to(element.el, 1, {
+                        x: totalTransform.translateX,
+                        y: totalTransform.translateY,
+                        directionalRotation: {
+                            rotationX: totalTransform.rotateX,
+                            rotationY: totalTransform.rotateY
+                        },
+                        scaleX: totalTransform.scaleX,
+                        scaleY: totalTransform.scaleY,
+                        ease: Power2.easeOut,
+                        overwrite: 0
+                    });
+                }
             }
         })
     };
 
+    let scrollTimeout = null;
     // SCROLL MOVEMENT SETUP
     function scrollSetup() {
         scroll.y = window.pageYOffset; // Vertical scrolled amount
-        scrollParallax();
+        
+        if(scrollTimeout){
+            clearTimeout(scrollTimeout);
+        }
+
+        // Set timer so it only fires every 10 seconds for scrolling, otherwise its too taxing
+        scrollTimeout = setTimeout(scrollParallax, 10);
     };
     
     // SCROLL MOVEMENT PARALLAX
     function scrollParallax() {
         parallaxElements.forEach(element => {
-            if(element.offsetRotPassiveX || element.offsetRotPassiveY || element.offsetTransPassiveX || element.offsetTransPassiveY){
+            if(element.offsetRotPassiveX || element.offsetRotPassiveY || 
+            element.offsetTransPassiveX || element.offsetTransPassiveY || 
+            element.offsetScalePassiveX || element.offsetScalePassiveY){
                 // Need for initial state when mouse not triggered
                 calculateActive(element);
                 calculatePassive(element);
                 calculateTotal();
-                
-                TweenMax.to(element.el, .3, {
+
+                TweenMax.to(element.el, .4, {
                     x: totalTransform.translateX,
                     y: totalTransform.translateY,
                     directionalRotation: {
@@ -149,67 +155,35 @@
             }
         });
     };
-    
-    // Init values
-    let oldScrollPassive    = {x: -1, y: -1}, 
-        oldRotatePassive    = {x: -1, y: -1},
-        oldTranslatePassive = {x: -1, y: -1},
-        scrollCounter       = {x: 1, y: 1};
 
     function calculatePassive(element){
         // Scroll Rotate Amount
-        if(oldRotatePassive.x !== rotate.passiveX){
-            rotate.passiveX = !!element.offsetRotPassiveX ? -scroll.y * element.offsetRotPassiveX : element.rotX;
-        }
-        if(oldRotatePassive.x !== rotate.passiveX){
-            rotate.passiveY = !!element.offsetRotPassiveY ? scroll.y * element.offsetRotPassiveY : element.rotY;
-        }
+        rotate.passiveX = !!element.offsetRotPassiveX ? (-scroll.y * element.offsetRotPassiveX).toFixed(2) : element.rotX;
+        rotate.passiveY = !!element.offsetRotPassiveY ? (scroll.y * element.offsetRotPassiveY).toFixed(2) : element.rotY;
         
         // Scroll Translate Amount
-        if(oldTranslatePassive.x !== translate.passiveX){
-            translate.passiveX  = !!element.offsetTransPassiveX ? scroll.y * element.offsetTransPassiveX : element.x;
-        }
-        if(oldTranslatePassive.y !== translate.passiveY) {
-            translate.passiveY  = !!element.offsetTransPassiveY ? scroll.y * element.offsetTransPassiveY : element.y;
-        } 
-        
+        translate.passiveX  = !!element.offsetTransPassiveX ? (scroll.y * element.offsetTransPassiveX).toFixed(2) : element.x;
+        translate.passiveY  = !!element.offsetTransPassiveY ?( scroll.y * element.offsetTransPassiveY).toFixed(2) : element.y;
+    
         // Scroll Scale Amount
-        if(scroll.y > oldScrollPassive.y) {
-            scrollCounter.x += element.offsetScalePassiveX;
-            scrollCounter.y += element.offsetScalePassiveY;
-        } else if(scroll.y < oldScrollPassive.y) {
-            scrollCounter.x -= element.offsetScalePassiveX;
-            scrollCounter.y -= element.offsetScalePassiveY;
-        }
-        scale.passiveX = !!element.offsetScalePassiveX && scroll.y !== 0 ? scrollCounter.x : element.scaleX;
-        scale.passiveY = !!element.offsetScalePassiveY && scroll.y !== 0 ? scrollCounter.y : element.scaleY;
-        
-        // Swap to new values
-        oldScrollPassive.y = scroll.y;
-        oldRotatePassive.x = rotate.passiveX;
-        oldRotatePassive.y = rotate.passiveY;
-        oldTranslatePassive.x = translate.passiveX;
-        oldTranslatePassive.y = translate.passiveY;
+        scale.passiveX = !!element.offsetScalePassiveX && scroll.y !== 0 ? ((scroll.y/documentHeight+1) * (1+element.offsetScalePassiveX)).toFixed(2) : element.scaleX;
+        scale.passiveY = !!element.offsetScalePassiveY && scroll.y !== 0 ? ((scroll.y/documentHeight+1) * (1+element.offsetScalePassiveY)).toFixed(2) : element.scaleY;
     }
 
     function calculateActive(element) {        
         // Mouse Rotate Amount
-        rotate.activeX  = !!element.offsetRotActive ? -(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotX;
-        rotate.activeY  = !!element.offsetRotActive ? (mouse.x-viewport.x/2) / (viewport.x/2) * 45 * element.offsetRotActive : element.rotY;
+        rotate.activeX  = !!element.offsetRotActive ? (-(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive).toFixed(2) : element.rotX;
+        rotate.activeY  = !!element.offsetRotActive ? ((mouse.x-viewport.x/2) / (viewport.x/2) * 45 * element.offsetRotActive).toFixed(2) : element.rotY;
         
         // Mouse Translate Amount
-        translate.activeX   = !!element.offsetTransActive ? (mouse.x - viewport.x/2) * element.offsetTransActive : element.x;
-        translate.activeY   = !!element.offsetTransActive ? (mouse.y - viewport.y/2) * element.offsetTransActive : element.y;
-        
-        // Scroll Scale Amount
-        // scale.activeX = !!element.offsetScaleActiveX ? (mouse.x - viewport.x/2) * element.offsetScaleActiveX : element.scaleX;
-        // scale.activeY = !!element.offsetScaleActiveY ? (mouse.y - viewport.y/2) * element.offsetScaleActiveY : element.scaleY;
+        translate.activeX   = !!element.offsetTransActive ? ((mouse.x - viewport.x/2) * element.offsetTransActive).toFixed(2) : element.x;
+        translate.activeY   = !!element.offsetTransActive ? ((mouse.y - viewport.y/2) * element.offsetTransActive).toFixed(2) : element.y;
     }
     
     function calculateTotal() {
         // Sums of active and passive components (limited angles to 20deg)
-        totalTransform.rotateX = math.clamp(rotate.passiveX + rotate.activeX, -20, 20) + '_short';
-        totalTransform.rotateY = math.clamp(rotate.passiveY + rotate.activeY, -20, 20) + '_short';
+        totalTransform.rotateX = math.clamp(Number(rotate.passiveX) + Number(rotate.activeX), -15, 15) + '_short';
+        totalTransform.rotateY = math.clamp(Number(rotate.passiveY) + Number(rotate.activeY), -15, 15) + '_short';
 
         totalTransform.translateX = translate.passiveX + translate.activeX;
         totalTransform.translateY = translate.passiveY + translate.activeY;
@@ -222,19 +196,22 @@
     function reset() {
         parallaxElements.forEach(element => {
             calculatePassive(element);
-            
-            TweenMax.to(element.el, .75, {
-                x: translate.passiveX,
-                y: translate.passiveY,
-                directionalRotation: {
-                    rotationX: rotate.passiveX + '_short',
-                    rotationY: rotate.passiveY + '_short'
-                },
-                scaleX: scale.passiveX,
-                scaleY: scale.passiveX,
-                ease: Quad.easeOut,
-                overwrite: 3
-            });
+            calculateActive(element);
+
+            if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y) {
+                TweenMax.to(element.el, .8, {
+                    x: translate.passiveX,
+                    y: translate.passiveY,
+                    directionalRotation: {
+                        rotationX: rotate.passiveX + '_short',
+                        rotationY: rotate.passiveY + '_short'
+                    },
+                    scaleX: scale.passiveX,
+                    scaleY: scale.passiveX,
+                    ease: Quad.easeOut,
+                    overwrite: 3
+                });
+            }
         });
     };
 
@@ -247,10 +224,12 @@
         let matrix = new WebKitCSSMatrix(style.webkitTransform);
         
         // Decompose the matrix values
-        let rotation = {},
-            translation = {},
-            scale = {};
+        let translation = {},
+            rotation    = {},
+            scale       = {};
         
+        ([translation.X, translation.Y, translation.Z] = [matrix.m41, matrix.m42, matrix.m43]);
+
         rotation.Y = -Math.asin(math.clamp(matrix.m13, -1, 1)) * math.RAD_to_DEG;
         if (Math.abs(matrix.m13) < 0.99999) {
             rotation.X = Math.atan2(-matrix.m23, matrix.m33) * math.RAD_to_DEG;
@@ -260,10 +239,9 @@
             rotation.Z = 0;
         }
         
-        ([translation.X, translation.Y, translation.Z] = [matrix.m41, matrix.m42, matrix.m43]);
-        scale.X = Math.sqrt(matrix.m11 * matrix.m11 + matrix.m12 * matrix.m12 + matrix.m13 * matrix.m13);
-        scale.Y = Math.sqrt(matrix.m21 * matrix.m21 + matrix.m22 * matrix.m22 + matrix.m23 * matrix.m23);
-        scale.Z = Math.sqrt(matrix.m31 * matrix.m31 + matrix.m32 * matrix.m32 + matrix.m33 * matrix.m33);
+        scale.X = Math.sqrt(matrix.m11*matrix.m11 + matrix.m12*matrix.m12 + matrix.m13*matrix.m13);
+        scale.Y = Math.sqrt(matrix.m21*matrix.m21 + matrix.m22*matrix.m22 + matrix.m23*matrix.m23);
+        scale.Z = Math.sqrt(matrix.m31*matrix.m31 + matrix.m32*matrix.m32 + matrix.m33*matrix.m33);
         
         // Returns CURRENT position of element (even if its moving)
         return {rotation, translation, scale};
