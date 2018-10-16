@@ -8,27 +8,36 @@
         parallaxElements = [];
     
     // Mouse position relative to viewport
-    let mouse = {x: window.clientX, y: window.clientY};
-    
+    let mouse = { x: window.clientX, y: window.clientY };    
     // Document position
-    let scroll = {x: window.pageXOffset, y: window.pageYOffset};
-
+    let scroll = { x: window.pageXOffset, y: window.pageYOffset };
     // Viewport width and height
     let viewport = {};
     
     // Transform values
-    let rotate      = {},
-        translate   = {};
+    let rotate          = {},
+        translate       = {},
+        totalTransform  = {};
 
-    // Contains total calculated transform values
-    let total = {};
-    
     window.addEventListener("DOMContentLoaded", init, false);
     
     // INIT
     function init() {
         parallaxElementsList.forEach(element => {
+            let rotation, translation,
+                offsetTransPassiveX, offsetTransPassiveY,
+                offsetRotPassiveX, offsetRotPassiveY;
+
+            // Get initial positions of element
             ({rotation, translation} = decomposeMatrix(element));
+            
+            if(element.dataset.parallaxRotatePassive) {
+                [offsetRotPassiveX, offsetRotPassiveY] = regexSeparation(element.dataset.parallaxRotatePassive);
+            }
+
+            if(element.dataset.parallaxTranslatePassive) {
+                [offsetTransPassiveX, offsetTransPassiveY] = regexSeparation(element.dataset.parallaxTranslatePassive);
+            }
 
             parallaxElements.push({
                 el:     element, 
@@ -40,10 +49,12 @@
                 offsetRotActive:     Number(element.dataset.parallaxRotateActive),
                 offsetTransActive:   Number(element.dataset.parallaxTranslateActive),
 
-                offsetRotPassiveX:   Number(element.dataset.parallaxRotatePassiveX),
-                offsetRotPassiveY:   Number(element.dataset.parallaxRotatePassiveY),
-                offsetTransPassiveX: Number(element.dataset.parallaxTranslatePassiveX),
-                offsetTransPassiveY: Number(element.dataset.parallaxTranslatePassiveY)
+                offsetRotPassiveX:   Number(offsetRotPassiveX),
+                offsetRotPassiveY:   Number(offsetRotPassiveY),
+                offsetTransPassiveX: Number(offsetTransPassiveX),
+                offsetTransPassiveY: Number(offsetTransPassiveY),
+                
+                offsetTransPassiveYPow: Number(element.dataset.parallaxTranslatePassiveYPow)
             });
         });
 
@@ -53,6 +64,15 @@
         window.addEventListener('DOMMouseScroll', scrollSetup, false);
         window.addEventListener("mouseout", reset, false);
         reset();
+    };
+
+    // DATASET REGEX SEPARATION
+    function regexSeparation(data) {
+        let re = /[^,\s]+/g;
+        
+        if(data){
+            return data.match(re);
+        }
     };
     
     // MOUSE MOVEMENT SETUP
@@ -75,11 +95,11 @@
                 calculateTotal();
 
                 TweenMax.to(element.el, 1, {
-                    x: total.translateX,
-                    y: total.translateY,
+                    x: totalTransform.translateX,
+                    y: totalTransform.translateY,
                     directionalRotation: {
-                        rotationX: total.rotateX,
-                        rotationY: total.rotateY
+                        rotationX: totalTransform.rotateX,
+                        rotationY: totalTransform.rotateY
                     },
                     ease: Power2.easeOut,
                     overwrite: 0
@@ -103,17 +123,13 @@
                 calculateActive(element);
                 calculatePassive(element);
                 calculateTotal();
-
-                // if(element.el.classList.contains('header__letter')) {
-                //     console.log(element.el);
-                // }
-
+                
                 TweenMax.to(element.el, 0, {
-                    x: total.translateX,
-                    y: total.translateY,
+                    x: totalTransform.translateX,
+                    y: totalTransform.translateY,
                     directionalRotation: {
-                        rotationX: total.rotateX,
-                        rotationY: total.rotateY
+                        rotationX: totalTransform.rotateX,
+                        rotationY: totalTransform.rotateY
                     },
                     ease: Power0.easeOut,
                     overwrite: 2
@@ -124,28 +140,28 @@
     
     function calculatePassive(element){
         // Scroll Rotate Amount
-        rotate.passiveX      = !isNaN(element.offsetRotPassiveX) ? -scroll.y * element.offsetRotPassiveX : element.rotX;
-        rotate.passiveY      = !isNaN(element.offsetRotPassiveY) ? scroll.y * element.offsetRotPassiveY : element.rotY;
+        rotate.passiveX      = !!element.offsetRotPassiveX ? -scroll.y * element.offsetRotPassiveX : element.rotX;
+        rotate.passiveY      = !!element.offsetRotPassiveY ? scroll.y * element.offsetRotPassiveY : element.rotY;
         // Scroll Translate Amount
-        translate.passiveX   = !isNaN(element.offsetTransPassiveX) ? scroll.y * element.offsetTransPassiveX : element.x;
-        translate.passiveY   = !isNaN(element.offsetTransPassiveY) ? scroll.y * element.offsetTransPassiveY : element.y;
+        translate.passiveX   = !!element.offsetTransPassiveX ? scroll.y * element.offsetTransPassiveX : element.x;
+        translate.passiveY   = !!element.offsetTransPassiveY ? scroll.y * element.offsetTransPassiveY : element.y;
     }
-
+    
     function calculateActive(element) {
         // Mouse Rotate Amount
-        rotate.activeX  = !isNaN(element.offsetRotActive) ? -(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotX;
-        rotate.activeY  = !isNaN(element.offsetRotActive) ? (mouse.x-viewport.x/2) / (viewport.x/2) * 45 * element.offsetRotActive : element.rotY;
+        rotate.activeX  = !!element.offsetRotActive ? -(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotX;
+        rotate.activeY  = !!element.offsetRotActive ? (mouse.x-viewport.x/2) / (viewport.x/2) * 45 * element.offsetRotActive : element.rotY;
         // Mouse Translate Amount
-        translate.activeX    = !isNaN(element.offsetTransActive) ? (mouse.x - viewport.x/2) * element.offsetTransActive : element.x;
-        translate.activeY   = !isNaN(element.offsetTransActive) ? (mouse.y - viewport.y/2) * element.offsetTransActive : element.y;
+        translate.activeX    = !!element.offsetTransActive ? (mouse.x - viewport.x/2) * element.offsetTransActive : element.x;
+        translate.activeY   = !!element.offsetTransActive ? (mouse.y - viewport.y/2) * element.offsetTransActive : element.y;
     }
-
+    
     function calculateTotal() {
         // Sums of active and passive components
-        total.rotateX = (rotate.passiveX + rotate.activeX) + '_short';
-        total.rotateY = (rotate.passiveY + rotate.activeY) + '_short';
-        total.translateX = translate.passiveX + translate.activeX;
-        total.translateY = translate.passiveY + translate.activeY;
+        totalTransform.rotateX = (rotate.passiveX + rotate.activeX) + '_short';
+        totalTransform.rotateY = (rotate.passiveY + rotate.activeY) + '_short';
+        totalTransform.translateX = translate.passiveX + translate.activeX;
+        totalTransform.translateY = translate.passiveY + translate.activeY;
     }
 
     // RESET
