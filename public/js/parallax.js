@@ -104,6 +104,10 @@
                 calculatePassive(element);
                 calculateTotal();
 
+                // if(element.el.classList.contains('header__letter')) {
+                //     console.log(element.el);
+                // }
+
                 TweenMax.to(element.el, 0, {
                     x: total.translateX,
                     y: total.translateY,
@@ -117,13 +121,13 @@
             }
         });
     };
-
+    
     function calculatePassive(element){
         // Scroll Rotate Amount
-        rotate.passiveX      = !isNaN(element.offsetRotPassiveX) ? -scroll.x * element.offsetRotPassiveX : element.rotX;
+        rotate.passiveX      = !isNaN(element.offsetRotPassiveX) ? -scroll.y * element.offsetRotPassiveX : element.rotX;
         rotate.passiveY      = !isNaN(element.offsetRotPassiveY) ? scroll.y * element.offsetRotPassiveY : element.rotY;
         // Scroll Translate Amount
-        translate.passiveX   = !isNaN(element.offsetTransPassiveX) ? scroll.x * element.offsetTransPassiveX : element.x;
+        translate.passiveX   = !isNaN(element.offsetTransPassiveX) ? scroll.y * element.offsetTransPassiveX : element.x;
         translate.passiveY   = !isNaN(element.offsetTransPassiveY) ? scroll.y * element.offsetTransPassiveY : element.y;
     }
 
@@ -132,7 +136,7 @@
         rotate.activeX  = !isNaN(element.offsetRotActive) ? -(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotX;
         rotate.activeY  = !isNaN(element.offsetRotActive) ? (mouse.x-viewport.x/2) / (viewport.x/2) * 45 * element.offsetRotActive : element.rotY;
         // Mouse Translate Amount
-        translate.active    = !isNaN(element.offsetTransActive) ? (mouse.x - viewport.x/2) * element.offsetTransActive : element.x;
+        translate.activeX    = !isNaN(element.offsetTransActive) ? (mouse.x - viewport.x/2) * element.offsetTransActive : element.x;
         translate.activeY   = !isNaN(element.offsetTransActive) ? (mouse.y - viewport.y/2) * element.offsetTransActive : element.y;
     }
 
