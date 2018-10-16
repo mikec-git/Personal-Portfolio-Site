@@ -1,13 +1,3 @@
-// MATH UTILITY Object
-let mathProto = function() {
-    // Radians to degree conversion
-    this.RAD_to_DEG =  180 / Math.PI;
-};
-// Clamps number to min or max value
-mathProto.prototype.clamp = function(num, min, max) {
-    return Math.min(Math.max(num, min), max);
-};
-
 // Main function
 (function parallax() {    
     // New instance of math helper object
@@ -19,8 +9,10 @@ mathProto.prototype.clamp = function(num, min, max) {
     
     // Mouse position relative to viewport
     let mouse = {x: null, y: null};
+    
     // Document position
-    let scroll = {x: window.pageXOffset, y: window.pageYOffset};    
+    let scroll = {x: window.pageXOffset, y: window.pageYOffset};
+
     // Viewport width and height
     let viewport = {x: null, x: null};    
     
@@ -35,8 +27,10 @@ mathProto.prototype.clamp = function(num, min, max) {
         translateXPassive,
         translateYPassive;
     
-    let rotX,
-        rotY;
+    let totalRotateX,
+        totalRotateY,
+        totalTranslateX,
+        totalTranslateY;
     
     // Comparison variables for loop
     let oldPassive = {translateX: null, translateY: null, rotateX: null, rotateY: null};
@@ -72,12 +66,11 @@ mathProto.prototype.clamp = function(num, min, max) {
     
     // MOUSE MOVEMENT SETUP
     function mouseSetup(e) {
-        e           = e || window.event; // old IE support        
-        mouse.x      = e.clientX;
-        mouse.y      = e.clientY;
-        viewport.x   = window.innerWidth;
-        viewport.y   = window.innerHeight;
-
+        e           = e || window.event;    // old IE support        
+        mouse.x      = e.clientX;           // Horizontal mouse position
+        mouse.y      = e.clientY;           // Vertical mouse position
+        viewport.x   = window.innerWidth;   // Viewport width
+        viewport.y   = window.innerHeight;  // Viewport Height
         mouseParallax();
     };
     
@@ -86,28 +79,16 @@ mathProto.prototype.clamp = function(num, min, max) {
         parallaxElements.forEach(element => {
             if(element.offsetRotActive || element.offsetTransActive) {
                 // Need for initial state when scroll not triggered
-                rotateXPassive      = !isNaN(element.offsetRotPassiveX) ? -scroll.x * element.offsetRotPassiveX : element.rotX;
-                rotateYPassive      = !isNaN(element.offsetRotPassiveY) ? scroll.y * element.offsetRotPassiveY : element.rotY;
-                translateXPassive   = !isNaN(element.offsetTransPassiveX) ? scroll.x * element.offsetTransPassiveX : element.x;
-                translateYPassive   = !isNaN(element.offsetTransPassiveY) ? scroll.y * element.offsetTransPassiveY : element.y;
-
-                // Rotate Amount
-                rotateXActive = !isNaN(element.offsetRotActive) ? -(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotX;
-                rotateYActive = !isNaN(element.offsetRotActive) ? (mouse.x-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotY;
-                
-                // Mouse translate Amount
-                translateXActive = !isNaN(element.offsetTransActive) ? (mouse.x - viewport.y/2) * element.offsetTransActive : element.x;
-                translateYActive = !isNaN(element.offsetTransActive) ? (mouse.y - viewport.y/2) * element.offsetTransActive : element.y;
-                
-                rotX = (rotateXActive + rotateXPassive) + '_short';
-                rotY = (rotateYActive + rotateYPassive) + '_short';
+                calculatePassive(element);
+                calculateActive(element);                
+                calculateTotal();
 
                 TweenMax.to(element.el, 1, {
                     x: translateXActive + translateXPassive,
                     y: translateYActive + translateYPassive,
                     directionalRotation: {
-                        rotationX: rotX,
-                        rotationY: rotY
+                        rotationX: totalRotateX,
+                        rotationY: totalRotateY
                     },
                     ease: Power2.easeOut,
                     overwrite: 2
@@ -118,9 +99,8 @@ mathProto.prototype.clamp = function(num, min, max) {
 
     // SCROLL MOVEMENT SETUP
     function scrollSetup() {
-        // Pixels scrolled from top or left of document
-        scroll.x = window.pageXOffset;
-        scroll.y = window.pageYOffset;
+        scroll.x = window.pageXOffset; // Horizontal scrolled amount
+        scroll.y = window.pageYOffset; // Vertical scrolled amount
         scrollParallax();
     };
     
@@ -135,21 +115,9 @@ mathProto.prototype.clamp = function(num, min, max) {
                 oldPassive.rotateY = rotateYPassive;
 
                 // Need for initial state when mouse not triggered
-                rotateXActive       = !isNaN(element.offsetRotActive) ? -(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotX;
-                rotateYActive       = !isNaN(element.offsetRotActive) ? (mouse.x-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotY;
-                translateXActive    = !isNaN(element.offsetTransActive) ? (mouse.x - viewport.y/2) * element.offsetTransActive : element.x;
-                translateYActive    = !isNaN(element.offsetTransActive) ? (mouse.y - viewport.y/2) * element.offsetTransActive : element.y;
-
-                // Rotate Amount
-                rotateXPassive = !isNaN(element.offsetRotPassiveX) ? -scroll.x * element.offsetRotPassiveX : element.rotX;
-                rotateYPassive = !isNaN(element.offsetRotPassiveY) ? scroll.y * element.offsetRotPassiveY : element.rotY;
-
-                // Mouse translate Amount
-                translateXPassive = !isNaN(element.offsetTransPassiveX) ? scroll.x * element.offsetTransPassiveX : element.x;
-                translateYPassive = !isNaN(element.offsetTransPassiveY) ? scroll.y * element.offsetTransPassiveY : element.y;
-
-                rotX = (rotateXPassive + rotateXActive) + '_short';
-                rotY = (rotateYPassive + rotateYActive) + '_short';
+                calculateActive(element);
+                calculatePassive(element);
+                calculateTotal();
     
                 if(oldPassive.translateY !== translateYPassive || oldPassive.translateX !== translateXPassive || 
                 oldPassive.rotateX !== rotateXPassive || oldPassive.rotateY !== rotateYPassive){
@@ -157,8 +125,8 @@ mathProto.prototype.clamp = function(num, min, max) {
                         x: translateXPassive + translateXActive,
                         y: translateYPassive + translateYActive,
                         directionalRotation: {
-                            rotationX: rotX,
-                            rotationY: rotY
+                            rotationX: totalRotateX,
+                            rotationY: totalRotateY
                         },
                         ease: Power0.easeOut,
                         overwrite: 0
@@ -167,6 +135,32 @@ mathProto.prototype.clamp = function(num, min, max) {
             }
         });
     };
+
+    function calculatePassive(element){
+        // Scroll Rotate Amount
+        rotateXPassive      = !isNaN(element.offsetRotPassiveX) ? -scroll.x * element.offsetRotPassiveX : element.rotX;
+        rotateYPassive      = !isNaN(element.offsetRotPassiveY) ? scroll.y * element.offsetRotPassiveY : element.rotY;
+        // Scroll Translate Amount
+        translateXPassive   = !isNaN(element.offsetTransPassiveX) ? scroll.x * element.offsetTransPassiveX : element.x;
+        translateYPassive   = !isNaN(element.offsetTransPassiveY) ? scroll.y * element.offsetTransPassiveY : element.y;
+    }
+
+    function calculateActive(element) {
+        // Mouse Rotate Amount
+        rotateXActive       = !isNaN(element.offsetRotActive) ? -(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotX;
+        rotateYActive       = !isNaN(element.offsetRotActive) ? (mouse.x-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotY;
+        // Mouse Translate Amount
+        translateXActive    = !isNaN(element.offsetTransActive) ? (mouse.x - viewport.y/2) * element.offsetTransActive : element.x;
+        translateYActive    = !isNaN(element.offsetTransActive) ? (mouse.y - viewport.y/2) * element.offsetTransActive : element.y;
+    }
+
+    function calculateTotal() {
+        // Sums of active and passive components
+        totalRotateX = (rotateXPassive + rotateXActive) + '_short';
+        totalRotateY = (rotateYPassive + rotateYActive) + '_short';
+        totalTranslateX = translateXPassive + translateXActive;
+        totalTranslateY = translateYPassive + translateYActive;
+    }
 
     // RESET
     function reset() {
@@ -211,4 +205,14 @@ mathProto.prototype.clamp = function(num, min, max) {
         // Returns CURRENT position of element (even if its moving)
         return {rotation, translation};
     }
+
+    // MATH UTILITY Object
+    function mathProto() {
+        // Radians to degree conversion
+        this.RAD_to_DEG =  180 / Math.PI;
+    };
+    // Clamps number to min or max value
+    mathProto.prototype.clamp = function(num, min, max) {
+        return Math.min(Math.max(num, min), max);
+    };
 })();
