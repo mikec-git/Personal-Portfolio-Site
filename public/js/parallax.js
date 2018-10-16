@@ -8,22 +8,19 @@
         parallaxElements = [];
     
     // Mouse position relative to viewport
-    let mouse = {x: null, y: null};
+    let mouse = {x: window.clientX, y: window.clientY};
     
     // Document position
     let scroll = {x: window.pageXOffset, y: window.pageYOffset};
 
     // Viewport width and height
-    let viewport = {x: null, x: null};    
+    let viewport = {};
     
     // Transform values
-    let rotateXActive,
-        rotateYActive,
-        translateXActive,
+    let rotate = {}
+    let translateXActive,
         translateYActive,
 
-        rotateXPassive,
-        rotateYPassive,
         translateXPassive,
         translateYPassive;
     
@@ -48,8 +45,10 @@
                 y:      translation.Y,  // Original y-translation
                 rotX:   rotation.X,     // Original x-rotation
                 rotY:   rotation.Y,     // Original y-rotation
+                
                 offsetRotActive:     Number(element.dataset.parallaxRotateActive),
                 offsetTransActive:   Number(element.dataset.parallaxTranslateActive),
+
                 offsetRotPassiveX:   Number(element.dataset.parallaxRotatePassiveX),
                 offsetRotPassiveY:   Number(element.dataset.parallaxRotatePassiveY),
                 offsetTransPassiveX: Number(element.dataset.parallaxTranslatePassiveX),
@@ -62,6 +61,7 @@
         window.addEventListener("mousewheel", scrollSetup, false);        
         window.addEventListener('DOMMouseScroll', scrollSetup, false);
         window.addEventListener("mouseout", reset, false);
+        reset();
     };
     
     // MOUSE MOVEMENT SETUP
@@ -84,8 +84,8 @@
                 calculateTotal();
 
                 TweenMax.to(element.el, 1, {
-                    x: translateXActive + translateXPassive,
-                    y: translateYActive + translateYPassive,
+                    x: totalTranslateX,
+                    y: totalTranslateY,
                     directionalRotation: {
                         rotationX: totalRotateX,
                         rotationY: totalRotateY
@@ -111,8 +111,8 @@
                 // Comparison with old values
                 oldPassive.translateY = translateYPassive;
                 oldPassive.translateX = translateXPassive;
-                oldPassive.rotateX = rotateXPassive;
-                oldPassive.rotateY = rotateYPassive;
+                oldPassive.rotateX = rotate.passiveX;
+                oldPassive.rotateY = rotate.passiveY;
 
                 // Need for initial state when mouse not triggered
                 calculateActive(element);
@@ -120,10 +120,10 @@
                 calculateTotal();
     
                 if(oldPassive.translateY !== translateYPassive || oldPassive.translateX !== translateXPassive || 
-                oldPassive.rotateX !== rotateXPassive || oldPassive.rotateY !== rotateYPassive){
+                oldPassive.rotateX !== rotate.passiveX || oldPassive.rotateY !== rotate.passiveY){
                     TweenMax.to(element.el, 0, {
-                        x: translateXPassive + translateXActive,
-                        y: translateYPassive + translateYActive,
+                        x: totalTranslateX,
+                        y: totalTranslateY,
                         directionalRotation: {
                             rotationX: totalRotateX,
                             rotationY: totalRotateY
@@ -138,8 +138,8 @@
 
     function calculatePassive(element){
         // Scroll Rotate Amount
-        rotateXPassive      = !isNaN(element.offsetRotPassiveX) ? -scroll.x * element.offsetRotPassiveX : element.rotX;
-        rotateYPassive      = !isNaN(element.offsetRotPassiveY) ? scroll.y * element.offsetRotPassiveY : element.rotY;
+        rotate.passiveX      = !isNaN(element.offsetRotPassiveX) ? -scroll.x * element.offsetRotPassiveX : element.rotX;
+        rotate.passiveY      = !isNaN(element.offsetRotPassiveY) ? scroll.y * element.offsetRotPassiveY : element.rotY;
         // Scroll Translate Amount
         translateXPassive   = !isNaN(element.offsetTransPassiveX) ? scroll.x * element.offsetTransPassiveX : element.x;
         translateYPassive   = !isNaN(element.offsetTransPassiveY) ? scroll.y * element.offsetTransPassiveY : element.y;
@@ -147,17 +147,17 @@
 
     function calculateActive(element) {
         // Mouse Rotate Amount
-        rotateXActive       = !isNaN(element.offsetRotActive) ? -(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotX;
-        rotateYActive       = !isNaN(element.offsetRotActive) ? (mouse.x-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotY;
+        rotate.activeX       = !isNaN(element.offsetRotActive) ? -(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotX;
+        rotate.activeY       = !isNaN(element.offsetRotActive) ? (mouse.x-viewport.x/2) / (viewport.x/2) * 45 * element.offsetRotActive : element.rotY;
         // Mouse Translate Amount
-        translateXActive    = !isNaN(element.offsetTransActive) ? (mouse.x - viewport.y/2) * element.offsetTransActive : element.x;
+        translateXActive    = !isNaN(element.offsetTransActive) ? (mouse.x - viewport.x/2) * element.offsetTransActive : element.x;
         translateYActive    = !isNaN(element.offsetTransActive) ? (mouse.y - viewport.y/2) * element.offsetTransActive : element.y;
     }
 
     function calculateTotal() {
         // Sums of active and passive components
-        totalRotateX = (rotateXPassive + rotateXActive) + '_short';
-        totalRotateY = (rotateYPassive + rotateYActive) + '_short';
+        totalRotateX = (rotate.passiveX + rotate.activeX) + '_short';
+        totalRotateY = (rotate.passiveY + rotate.activeY) + '_short';
         totalTranslateX = translateXPassive + translateXActive;
         totalTranslateY = translateYPassive + translateYActive;
     }
@@ -165,13 +165,14 @@
     // RESET
     function reset() {
         parallaxElements.forEach(element => {
-            console.log("ran");
+            calculatePassive(element);
+
             TweenMax.to(element.el, .75, {
                 x: translateXPassive,
                 y: translateYPassive,
                 directionalRotation: {
-                    rotationX: rotateXPassive + '_short',
-                    rotationY: rotateYPassive + '_short'
+                    rotationX: rotate.passiveX + '_short',
+                    rotationY: rotate.passiveY + '_short'
                 },
                 ease: Quad.easeOut,
                 overwrite: 3
