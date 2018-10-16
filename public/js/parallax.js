@@ -1,16 +1,12 @@
 // MATH UTILITY Object
 let mathProto = function() {
+    // Radians to degree conversion
+    this.RAD_to_DEG =  180 / Math.PI;
 };
-
 // Clamps number to min or max value
 mathProto.prototype.clamp = function(num, min, max) {
     return Math.min(Math.max(num, min), max);
 };
-// Radians to degree conversion
-mathProto.prototype.RAD_to_DEG = function(){
-    return 180 / Math.PI;
-};
-
 
 // Main function
 (function parallax() {    
@@ -38,6 +34,9 @@ mathProto.prototype.RAD_to_DEG = function(){
         rotateYPassive,
         translateXPassive,
         translateYPassive;
+    
+    let rotX,
+        rotY;
     
     // Comparison variables for loop
     let oldPassive = {translateX: null, translateY: null, rotateX: null, rotateY: null};
@@ -68,7 +67,7 @@ mathProto.prototype.RAD_to_DEG = function(){
         window.addEventListener("scroll", scrollSetup, false);        
         window.addEventListener("mousewheel", scrollSetup, false);        
         window.addEventListener('DOMMouseScroll', scrollSetup, false);
-        // window.addEventListener("mouseout", reset, false);
+        window.addEventListener("mouseout", reset, false);
     };
     
     // MOUSE MOVEMENT SETUP
@@ -86,23 +85,32 @@ mathProto.prototype.RAD_to_DEG = function(){
     function mouseParallax() {
         parallaxElements.forEach(element => {
             if(element.offsetRotActive || element.offsetTransActive) {
+                // Need for initial state when scroll not triggered
+                rotateXPassive      = !isNaN(element.offsetRotPassiveX) ? -scroll.x * element.offsetRotPassiveX : element.rotX;
+                rotateYPassive      = !isNaN(element.offsetRotPassiveY) ? scroll.y * element.offsetRotPassiveY : element.rotY;
+                translateXPassive   = !isNaN(element.offsetTransPassiveX) ? scroll.x * element.offsetTransPassiveX : element.x;
+                translateYPassive   = !isNaN(element.offsetTransPassiveY) ? scroll.y * element.offsetTransPassiveY : element.y;
+
                 // Rotate Amount
-                rotateXActive = !isNaN(element.offsetRotActive) ? -(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive + '_short' : element.rotX;
-                rotateYActive = !isNaN(element.offsetRotActive) ? (mouse.x-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive + '_short' : element.rotY;
+                rotateXActive = !isNaN(element.offsetRotActive) ? -(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotX;
+                rotateYActive = !isNaN(element.offsetRotActive) ? (mouse.x-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotY;
                 
                 // Mouse translate Amount
                 translateXActive = !isNaN(element.offsetTransActive) ? (mouse.x - viewport.y/2) * element.offsetTransActive : element.x;
-                translateYActive = !isNaN(element.offsetTransActive) ? (mouse.y - viewport.y/2) * element.offsetTransActive : element.Y;
-        
+                translateYActive = !isNaN(element.offsetTransActive) ? (mouse.y - viewport.y/2) * element.offsetTransActive : element.y;
+                
+                rotX = (rotateXActive + rotateXPassive) + '_short';
+                rotY = (rotateYActive + rotateYPassive) + '_short';
+
                 TweenMax.to(element.el, 1, {
                     x: translateXActive + translateXPassive,
                     y: translateYActive + translateYPassive,
                     directionalRotation: {
-                        rotationX: rotateXActive + rotateXPassive,
-                        rotationY: rotateYActive + rotateYPassive
+                        rotationX: rotX,
+                        rotationY: rotY
                     },
                     ease: Power2.easeOut,
-                    overwrite: 2
+                    overwrite: 0
                 });
             }
         })
@@ -125,16 +133,23 @@ mathProto.prototype.RAD_to_DEG = function(){
                 oldPassive.translateX = translateXPassive;
                 oldPassive.rotateX = rotateXPassive;
                 oldPassive.rotateY = rotateYPassive;
-    
+
+                // Need for initial state when mouse not triggered
+                rotateXActive       = !isNaN(element.offsetRotActive) ? -(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotX;
+                rotateYActive       = !isNaN(element.offsetRotActive) ? (mouse.x-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive : element.rotY;
+                translateXActive    = !isNaN(element.offsetTransActive) ? (mouse.x - viewport.y/2) * element.offsetTransActive : element.x;
+                translateYActive    = !isNaN(element.offsetTransActive) ? (mouse.y - viewport.y/2) * element.offsetTransActive : element.y;
+
                 // Rotate Amount
-                rotateXPassive = !isNaN(element.offsetRotPassiveX) ? -scroll.x * element.offsetRotPassiveX + '_short' : element.rotX + '_short';
-                rotateYPassive = !isNaN(element.offsetRotPassiveY) ? scroll.y * element.offsetRotPassiveY + '_short' : element.rotY + '_short';
+                rotateXPassive = !isNaN(element.offsetRotPassiveX) ? -scroll.x * element.offsetRotPassiveX : element.rotX;
+                rotateYPassive = !isNaN(element.offsetRotPassiveY) ? scroll.y * element.offsetRotPassiveY : element.rotY;
 
                 // Mouse translate Amount
                 translateXPassive = !isNaN(element.offsetTransPassiveX) ? scroll.x * element.offsetTransPassiveX : element.x;
                 translateYPassive = !isNaN(element.offsetTransPassiveY) ? scroll.y * element.offsetTransPassiveY : element.y;
 
-                console.log(element.offsetTransPassiveY);
+                rotX = (rotateXPassive + rotateXActive) + '_short';
+                rotY = (rotateYPassive + rotateYActive) + '_short';
     
                 if(oldPassive.translateY !== translateYPassive || oldPassive.translateX !== translateXPassive || 
                 oldPassive.rotateX !== rotateXPassive || oldPassive.rotateY !== rotateYPassive){
@@ -142,11 +157,11 @@ mathProto.prototype.RAD_to_DEG = function(){
                         x: translateXPassive + translateXActive,
                         y: translateYPassive + translateYActive,
                         directionalRotation: {
-                            rotationX: rotateXPassive + rotateXActive,
-                            rotationY: rotateYPassive + rotateYActive
+                            rotationX: rotX,
+                            rotationY: rotY
                         },
                         ease: Power0.easeOut,
-                        overwrite: 0
+                        overwrite: 2
                     });
                 }
             }
@@ -156,9 +171,17 @@ mathProto.prototype.RAD_to_DEG = function(){
     // RESET
     function reset() {
         parallaxElements.forEach(element => {
-            if(element.dataset.parallaxRotateActive || element.dataset.parallaxTranslateActive) {
-                resetParallax(element);
-            }
+            console.log("ran");
+            TweenMax.to(element.el, 1, {
+                x: translateXPassive,
+                y: translateYPassive,
+                directionalRotation: {
+                    rotationX: rotateXPassive + '_short',
+                    rotationY: rotateYPassive + '_short'
+                },
+                ease: Expo.easeOut,
+                overwrite: 1
+            });
         });
     };
 
@@ -189,12 +212,12 @@ mathProto.prototype.RAD_to_DEG = function(){
         let rotation = { X: null, Y: null, Z: null };
         let translation = { X: null, Y: null, Z: null };
         
-        rotation.Y = -Math.asin(math.clamp(matrix.m13, -1, 1)) * math.RAD_to_DEG();
+        rotation.Y = -Math.asin(math.clamp(matrix.m13, -1, 1)) * math.RAD_to_DEG;
         if (Math.abs(matrix.m13) < 0.99999) {
-            rotation.X = Math.atan2(-matrix.m23, matrix.m33) * math.RAD_to_DEG();
-            rotation.Z = Math.atan2(-matrix.m12, matrix.m11) * math.RAD_to_DEG();
+            rotation.X = Math.atan2(-matrix.m23, matrix.m33) * math.RAD_to_DEG;
+            rotation.Z = Math.atan2(-matrix.m12, matrix.m11) * math.RAD_to_DEG;
         } else {
-            rotation.X = Math.atan2(matrix.m32, matrix.m22) * math.RAD_to_DEG();
+            rotation.X = Math.atan2(matrix.m32, matrix.m22) * math.RAD_to_DEG;
             rotation.Z = 0;
         }
         
