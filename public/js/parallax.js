@@ -22,11 +22,11 @@ mathProto.prototype.RAD_to_DEG = function(){
         parallaxElements = [];
     
     // Mouse position relative to viewport
-    let mouse = {X: null, Y: null};    
+    let mouse = {x: null, y: null};
     // Document position
-    let scroll = {X: window.pageXOffset, Y: window.pageYOffset};    
+    let scroll = {x: window.pageXOffset, y: window.pageYOffset};    
     // Viewport width and height
-    let viewport = {X: null, Y: null};    
+    let viewport = {x: null, x: null};    
     
     // Transform values
     let rotateXActive,
@@ -39,115 +39,116 @@ mathProto.prototype.RAD_to_DEG = function(){
         translateXPassive,
         translateYPassive;
     
-    let translateXOld,
-        translateYOld;
+    // Comparison variables for loop
+    let oldPassive = {translateX: null, translateY: null, rotateX: null, rotateY: null};
     
-    // Original position before active transform
-    let originalRotation = [],
-        originalTranslation = [];
-
     window.addEventListener("DOMContentLoaded", init, false);
     
     // INIT
     function init(e) {
-        parallaxElementsList.forEach((element, index) => {
-            ({rotation: originalRotation[index], translation: originalTranslation[index]} = decomposeMatrix(element));
+        parallaxElementsList.forEach(element => {
+            ({rotation, translation} = decomposeMatrix(element));
+
             parallaxElements.push({
                 el:     element, 
-                x:      originalTranslation.X, 
-                Y:      originalTranslation.Y, 
-                xRot:   originalRotation.X,
-                yRot:   originalTranslation.Y,
+                x:      translation.X,  // Original x-translation
+                y:      translation.Y,  // Original y-translation
+                rotX:   rotation.X,     // Original x-rotation
+                rotY:   rotation.Y,     // Original y-rotation
                 offsetRotActive:     Number(element.dataset.parallaxRotateActive),
                 offsetTransActive:   Number(element.dataset.parallaxTranslateActive),
                 offsetRotPassiveX:   Number(element.dataset.parallaxRotatePassiveX),
                 offsetRotPassiveY:   Number(element.dataset.parallaxRotatePassiveY),
                 offsetTransPassiveX: Number(element.dataset.parallaxTranslatePassiveX),
                 offsetTransPassiveY: Number(element.dataset.parallaxTranslatePassiveY)
-            })
+            });
         });
 
-        // window.addEventListener("mousemove", mouseSetup, false);
+        window.addEventListener("mousemove", mouseSetup, false);
         window.addEventListener("scroll", scrollSetup, false);        
         window.addEventListener("mousewheel", scrollSetup, false);        
         window.addEventListener('DOMMouseScroll', scrollSetup, false);
         // window.addEventListener("mouseout", reset, false);
     };
     
-    // // MOUSE MOVEMENT SETUP
-    // function mouseSetup(e) {
-    //     e           = e || window.event; // old IE support        
-    //     mouse.X      = e.clientX;
-    //     mouse.Y      = e.clientY;
-    //     viewport.X   = window.innerWidth;
-    //     viewport.Y   = window.innerHeight;     
+    // MOUSE MOVEMENT SETUP
+    function mouseSetup(e) {
+        e           = e || window.event; // old IE support        
+        mouse.x      = e.clientX;
+        mouse.y      = e.clientY;
+        viewport.x   = window.innerWidth;
+        viewport.y   = window.innerHeight;
 
-    //     parallaxElements.forEach(element => {
-    //         if(element.dataset.parallaxRotateActive || element.dataset.parallaxTranslateActive){
-    //             mouseParallax(element,
-    //                 Number(element.dataset.parallaxRotateActive), 
-    //                 Number(element.dataset.parallaxTranslateActive)
-    //             );
-    //         }
-    //     });
-    // };
+        mouseParallax();
+    };
     
-    // // MOUSE MOVEMENT PARALLAX
-    // function mouseParallax(element, offsetRotateActive, offsetTranslateActive) {
-    //     // Rotate Amount
-    //     rotateXActive = -(mouse.Y-viewport.Y/2) / (viewport.Y/2) * 45 * offsetRotateActive + '_short';
-    //     rotateYActive = (mouse.X-viewport.X/2) / (viewport.X/2) * 45 * offsetRotateActive + '_short';
+    // MOUSE MOVEMENT PARALLAX
+    function mouseParallax() {
+        parallaxElements.forEach(element => {
+            if(element.offsetRotActive || element.offsetTransActive) {
+                // Rotate Amount
+                rotateXActive = !isNaN(element.offsetRotActive) ? -(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive + '_short' : element.rotX;
+                rotateYActive = !isNaN(element.offsetRotActive) ? (mouse.x-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive + '_short' : element.rotY;
+                
+                // Mouse translate Amount
+                translateXActive = !isNaN(element.offsetTransActive) ? (mouse.x - viewport.y/2) * element.offsetTransActive : element.x;
+                translateYActive = !isNaN(element.offsetTransActive) ? (mouse.y - viewport.y/2) * element.offsetTransActive : element.Y;
         
-    //     // Mouse translate Amount
-    //     translateXActive = (mouse.X - viewport.X/2) * offsetTranslateActive;
-    //     translateYActive = (mouse.Y - viewport.Y/2) * offsetTranslateActive;
-
-    //     TweenLite.to(element, 1, {
-    //         x: translateXActive + translateXPassive + originalTranslation.X,
-    //         y: translateYActive + translateYPassive + originalTranslation.Y,
-    //         directionalRotation: {
-    //             rotationX: rotateXActive + rotateXPassive + originalRotation.X,
-    //             rotationY: rotateYActive + rotateYPassive + originalRotation.Y
-    //         },
-    //         ease: Power2.easeOut,
-    //         overwrite: 0
-    //     });
-    // };
+                TweenMax.to(element.el, 1, {
+                    x: translateXActive + translateXPassive,
+                    y: translateYActive + translateYPassive,
+                    directionalRotation: {
+                        rotationX: rotateXActive + rotateXPassive,
+                        rotationY: rotateYActive + rotateYPassive
+                    },
+                    ease: Power2.easeOut,
+                    overwrite: 2
+                });
+            }
+        })
+    };
 
     // SCROLL MOVEMENT SETUP
     function scrollSetup() {
         // Pixels scrolled from top or left of document
-        scroll.X = window.pageXOffset;
-        scroll.Y = window.pageYOffset;
+        scroll.x = window.pageXOffset;
+        scroll.y = window.pageYOffset;
         scrollParallax();
     };
     
     // SCROLL MOVEMENT PARALLAX
     function scrollParallax() {
         parallaxElements.forEach(element => {
-            // Comparison with old values
-            translateYOld = translateYPassive;
-            translateXOld = translateXPassive;
+            if(element.offsetRotPassiveX || element.offsetRotPassiveY || element.offsetTransPassiveX || element.offsetTransPassiveY){
+                // Comparison with old values
+                oldPassive.translateY = translateYPassive;
+                oldPassive.translateX = translateXPassive;
+                oldPassive.rotateX = rotateXPassive;
+                oldPassive.rotateY = rotateYPassive;
+    
+                // Rotate Amount
+                rotateXPassive = !isNaN(element.offsetRotPassiveX) ? -scroll.x * element.offsetRotPassiveX + '_short' : element.rotX + '_short';
+                rotateYPassive = !isNaN(element.offsetRotPassiveY) ? scroll.y * element.offsetRotPassiveY + '_short' : element.rotY + '_short';
 
-            // Rotate Amount
-            rotateXPassive = -scroll.X * element.offsetRotPassiveX + '_short';
-            rotateYPassive = scroll.Y * element.offsetRotPassiveY + '_short';
-            
-            // Mouse translate Amount
-            translateXPassive = scroll.X * element.offsetTransPassiveX;
-            translateYPassive = scroll.Y * element.offsetTransPassiveY;
+                // Mouse translate Amount
+                translateXPassive = !isNaN(element.offsetTransPassiveX) ? scroll.x * element.offsetTransPassiveX : element.x;
+                translateYPassive = !isNaN(element.offsetTransPassiveY) ? scroll.y * element.offsetTransPassiveY : element.y;
 
-            if(translateYOld !== translateYPassive || translateXOld !== translateXPassive){
-                TweenMax.to(element.el, 0, {
-                    x: translateXPassive,
-                    y: translateYPassive,
-                    directionalRotation: {
-                        rotationX: rotateXPassive + originalRotation.X,
-                        rotationY: rotateYPassive + originalRotation.Y
-                    },
-                    ease: Power0.easeOut,
-                    overwrite: 'all'
-                });
+                console.log(element.offsetTransPassiveY);
+    
+                if(oldPassive.translateY !== translateYPassive || oldPassive.translateX !== translateXPassive || 
+                oldPassive.rotateX !== rotateXPassive || oldPassive.rotateY !== rotateYPassive){
+                    TweenMax.to(element.el, 0, {
+                        x: translateXPassive + translateXActive,
+                        y: translateYPassive + translateYActive,
+                        directionalRotation: {
+                            rotationX: rotateXPassive + rotateXActive,
+                            rotationY: rotateYPassive + rotateYActive
+                        },
+                        ease: Power0.easeOut,
+                        overwrite: 0
+                    });
+                }
             }
         });
     };
