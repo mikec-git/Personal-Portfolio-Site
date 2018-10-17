@@ -116,7 +116,7 @@
                 calculateActive(element);                
                 calculateTotal();
                 
-                if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > 0) {
+                if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.1) {
                     TweenMax.to(element.el, 1, {
                         x: totalTransform.translateX,
                         y: totalTransform.translateY,
@@ -143,7 +143,7 @@
         if(scrollTimeout){
             clearTimeout(scrollTimeout);
         }
-        // Set timer so it only fires every 10 seconds for scrolling, otherwise its too taxing
+        // Set timer so it doesnt rapid fire like crazy, otherwise its too taxing
         scrollTimeout = setTimeout(scrollParallax, 10);
     };
     
@@ -159,8 +159,8 @@
                 calculateTotal();
 
                 // Only triggers transforms if element is inside or below viewport
-                if(element.el.getBoundingClientRect().bottom > 0 && opacity.passive > 0) {
-                    TweenMax.to(element.el, .4, {
+                if(element.el.getBoundingClientRect().bottom > 0 && opacity.passive > -0.1) {
+                    TweenMax.to(element.el, 0.3, {
                         x: totalTransform.translateX,
                         y: totalTransform.translateY,
                         directionalRotation: {
@@ -184,8 +184,8 @@
         rotate.passiveY = !!element.offsetRotPassiveY ? (scroll.y * element.offsetRotPassiveY).toFixed(2) : element.rotY;
         
         // Scroll Translate Amount
-        translate.passiveX  = !!element.offsetTransPassiveX ? (scroll.y * element.offsetTransPassiveX).toFixed(2) : element.x;
-        translate.passiveY  = !!element.offsetTransPassiveY ? (scroll.y * element.offsetTransPassiveY).toFixed(2) : element.y;
+        translate.passiveX  = !!element.offsetTransPassiveX && scroll.y !== 0 ? (scroll.y * element.offsetTransPassiveX + element.x).toFixed(2) : element.x;
+        translate.passiveY  = !!element.offsetTransPassiveY && scroll.y !== 0 ? (scroll.y * element.offsetTransPassiveY + element.y).toFixed(2) : element.y;
     
         // Scroll Scale Amount
         scale.passiveX = !!element.offsetScalePassiveX && scroll.y !== 0 ? ((scroll.y/documentHeight+1) * (1+element.offsetScalePassiveX)).toFixed(2) : element.scaleX;
@@ -231,8 +231,8 @@
             parallaxElements.forEach(element => {
                 calculatePassive(element);
                 calculateActive(element);
-    
-                if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > 0) {
+
+                if(scroll.y > 0 && element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.1) {
                     TweenMax.to(element.el, .8, {
                         x: translate.passiveX,
                         y: translate.passiveY,
