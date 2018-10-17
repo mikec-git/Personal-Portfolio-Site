@@ -9,11 +9,11 @@
     align-content: center;
     justify-items: center;
     align-items: center;
-
+    overflow: hidden;
+    
     &__bg {
         width: 100%;
         height: 100%;
-        overflow: hidden;
     }
 
     &__logo-box {
@@ -48,7 +48,6 @@
     }
 
     &__title {
-        width: 100%;
         font-size: 6rem;
         z-index: 2;
         top: 55vh;
@@ -66,34 +65,11 @@
     &__subtitle {
         font-size: 2.5rem;
         z-index: 2;
-        // position: relative;
-        // top: 6rem;
         top: 60vh;
         font-weight: 600;
     }
     
     &__letter {
         display: inline-block;
-
-        &--M {
-        }        
-        
-        &--I {
-        }
-        
-        &--K {
-        }
-        
-        &--E {
-        }
-
-        &--C {
-        }
-
-        &--H {
-        }
-
-        &--O {
-        }
     }
 }

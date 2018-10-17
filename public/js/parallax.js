@@ -7,10 +7,10 @@
     let parallaxElementsList    = document.querySelectorAll('.parallax'),
         parallaxElements        = [];    
     
-    let mouse           = { x: window.clientX, y: window.clientY },         // Mouse position relative to viewport    
-        scroll          = { x: window.pageXOffset, y: window.pageYOffset }, // Document position    
-        viewport        = {},                                               // Viewport width and height    
-        documentHeight  = document.body.clientHeight;                       // Entire document height
+    let mouse           = { x: window.clientX, y: window.clientY },   // Mouse position relative to viewport
+        scroll          = { x: window.pageXOffset, y: window.pageYOffset },   // Document position
+        viewport        = {},   // Viewport width and height
+        documentHeight  = document.body.clientHeight;   // Entire document height
     
     // Transform values
     let rotate          = {},
@@ -23,50 +23,34 @@
     
     // INIT
     function init() {
-        let rotationInit, translationInit,  scaleInit, opacityInit, displayInit,
-            offsetTransPassiveX,            offsetTransPassiveY,
-            offsetRotPassiveX,              offsetRotPassiveY,
-            offsetScalePassiveX,            offsetScalePassiveY,
+        let rotationInit, scaleInit,    opacityInit, displayInit,
+            offsetTransPassiveX,        offsetTransPassiveY,
+            offsetRotPassiveX,          offsetRotPassiveY,
+            offsetScalePassiveX,        offsetScalePassiveY,
             offsetOpacity;
 
         parallaxElementsList.forEach(element => {
-            // Get initial values of element
-            ({rotationInit, translationInit, scaleInit, opacityInit, displayInit} = decomposeMatrix(element));
+            ({rotationInit, scaleInit, opacityInit, displayInit} = decomposeMatrixStatic(element));
             
-            if(!!element.dataset.parallaxRotatePassive) {
-                [offsetRotPassiveX, offsetRotPassiveY] = regexSeparation(element.dataset.parallaxRotatePassive);
-            } else {
-                [offsetRotPassiveX, offsetRotPassiveY] = [NaN, NaN];
-            }
+            [offsetRotPassiveX, offsetRotPassiveY] 
+            = (!!element.dataset.parallaxRotatePassive) ? regexSeparation(element.dataset.parallaxRotatePassive) :  [NaN, NaN];
+            
+            [offsetTransPassiveX, offsetTransPassiveY] 
+            = (!!element.dataset.parallaxTranslatePassive) ? regexSeparation(element.dataset.parallaxTranslatePassive) : [NaN, NaN];
+            
+            [offsetScalePassiveX, offsetScalePassiveY] 
+            = (!!element.dataset.parallaxScalePassive) ? regexSeparation(element.dataset.parallaxScalePassive) : [NaN, NaN];
 
-            if(!!element.dataset.parallaxTranslatePassive) {
-                [offsetTransPassiveX, offsetTransPassiveY] = regexSeparation(element.dataset.parallaxTranslatePassive);
-            } else {
-                [offsetTransPassiveX, offsetTransPassiveY] = [NaN, NaN];
-            }
-
-            if(!!element.dataset.parallaxScalePassive) {
-                [offsetScalePassiveX, offsetScalePassiveY] = regexSeparation(element.dataset.parallaxScalePassive);
-            } else {
-                [offsetScalePassiveX, offsetScalePassiveY] = [NaN, NaN];
-            }
-
-            if(!!element.dataset.parallaxOpacity) {
-                offsetOpacity = regexSeparation(element.dataset.parallaxOpacity);
-            } else {
-                offsetOpacity = NaN;
-            }
+            offsetOpacity = (!!element.dataset.parallaxOpacity) ? regexSeparation(element.dataset.parallaxOpacity)[0] : NaN;
 
             parallaxElements.push({
                 el:         element, 
-                x:          translationInit.X,  // Original x-translation
-                y:          translationInit.Y,  //    ||    y-translation
-                rotX:       rotationInit.X,     //    ||    x-rotation
-                rotY:       rotationInit.Y,     //    ||    y-rotation
-                scaleX:     scaleInit.X,        //    ||    x-scale
-                scaleY:     scaleInit.Y,        //    ||    y-scale
-                opacity:    opacityInit,        //    ||    opacity
-                display:    displayInit,        //    ||    display
+                rotX:       rotationInit.X.toFixed(5),  //    ||    x-rotation
+                rotY:       rotationInit.Y.toFixed(5),  //    ||    y-rotation
+                scaleX:     scaleInit.X.toFixed(5),     //    ||    x-scale
+                scaleY:     scaleInit.Y.toFixed(5),     //    ||    y-scale
+                opacity:    opacityInit,                //    ||    opacity
+                display:    displayInit,                //    ||    display
                 
                 offsetRotActive:        Number(element.dataset.parallaxRotateActive),
                 offsetTransActive:      Number(element.dataset.parallaxTranslateActive),
@@ -81,13 +65,35 @@
                 offsetOpacity:          Number(offsetOpacity)
             });
         });
-        window.addEventListener("mousemove", mouseSetup, false);
-        window.addEventListener("scroll", scrollSetup, false);        
-        window.addEventListener("mousewheel", scrollSetup, false);        
+
+        assignTranslateProperties();
+        window.addEventListener('mousemove', mouseSetup, false);
+        window.addEventListener('scroll', scrollSetup, false);        
+        window.addEventListener('mousewheel', scrollSetup, false);        
         window.addEventListener('DOMMouseScroll', scrollSetup, false);
-        window.addEventListener("mouseout", reset, false);
-        reset();
+        window.addEventListener('mouseout', reset, false);
+        window.addEventListener('resize', assignTranslateProperties, false);
     };
+    
+    // FOR VALUES THAT DEPEND ON RESIZING SCREEN
+    function assignTranslateProperties() {
+        let translationInit, element;
+        let length = parallaxElements.length;
+        
+        for(let i = 0; i < length; i++) {
+            element = parallaxElements[i];
+            translationInit = decomposeMatrix(element.el);
+            
+            if(element.el.classList.contains("noise")) {
+                translationInit.X = -document.documentElement.clientWidth/2;
+            }
+            
+            element.x = translationInit.X;  // Original x-translation
+            element.y = translationInit.Y;  // Original y-translation
+        };
+        
+        reset();
+    }    
     
     // DATASET REGEX SEPARATION
     function regexSeparation(data) {
@@ -100,10 +106,11 @@
     // MOUSE MOVEMENT SETUP
     function mouseSetup(e) {
         e           = e || window.event;    // old IE support        
-        mouse.x      = e.clientX;           // Horizontal mouse position
-        mouse.y      = e.clientY;           // Vertical mouse position
-        viewport.x   = window.innerWidth;   // Viewport width
-        viewport.y   = window.innerHeight;  // Viewport Height
+        mouse.x     = e.clientX;            // Horizontal mouse position
+        mouse.y     = e.clientY;            // Vertical mouse position
+        viewport.x  = document.documentElement.clientWidth;   // Viewport width
+        viewport.y  = document.documentElement.clientHeight;  // Viewport Height
+        
         mouseParallax();
     };
     
@@ -180,16 +187,16 @@
 
     function calculatePassive(element){
         // Scroll Rotate Amount
-        rotate.passiveX = !!element.offsetRotPassiveX ? (-scroll.y * element.offsetRotPassiveX).toFixed(2) : element.rotX;
-        rotate.passiveY = !!element.offsetRotPassiveY ? (scroll.y * element.offsetRotPassiveY).toFixed(2) : element.rotY;
+        rotate.passiveX = !!element.offsetRotPassiveX && scroll.y !== 0 ? (-scroll.y * element.offsetRotPassiveX).toFixed(7) : element.rotX;
+        rotate.passiveY = !!element.offsetRotPassiveY && scroll.y !== 0 ? (scroll.y * element.offsetRotPassiveY).toFixed(7) : element.rotY;
         
         // Scroll Translate Amount
-        translate.passiveX  = !!element.offsetTransPassiveX && scroll.y !== 0 ? (scroll.y * element.offsetTransPassiveX + element.x).toFixed(2) : element.x;
-        translate.passiveY  = !!element.offsetTransPassiveY && scroll.y !== 0 ? (scroll.y * element.offsetTransPassiveY + element.y).toFixed(2) : element.y;
+        translate.passiveX  = !!element.offsetTransPassiveX && scroll.y !== 0 ? (scroll.y * element.offsetTransPassiveX + element.x).toFixed(5) : element.x;
+        translate.passiveY  = !!element.offsetTransPassiveY && scroll.y !== 0 ? (scroll.y * element.offsetTransPassiveY + element.y).toFixed(5) : element.y;
     
         // Scroll Scale Amount
-        scale.passiveX = !!element.offsetScalePassiveX && scroll.y !== 0 ? ((scroll.y/documentHeight+1) * (1+element.offsetScalePassiveX)).toFixed(2) : element.scaleX;
-        scale.passiveY = !!element.offsetScalePassiveY && scroll.y !== 0 ? ((scroll.y/documentHeight+1) * (1+element.offsetScalePassiveY)).toFixed(2) : element.scaleY;
+        scale.passiveX = !!element.offsetScalePassiveX && scroll.y !== 0 ? ((scroll.y/documentHeight+1) * (1+element.offsetScalePassiveX)).toFixed(5) : element.scaleX;
+        scale.passiveY = !!element.offsetScalePassiveY && scroll.y !== 0 ? ((scroll.y/documentHeight+1) * (1+element.offsetScalePassiveY)).toFixed(5) : element.scaleY;
 
         // Scroll Opacity Amount
         opacity.passive = !!element.offsetOpacity ? (element.opacity - (scroll.y/documentHeight*100 * element.offsetOpacity)) : element.opacity;
@@ -198,12 +205,12 @@
 
     function calculateActive(element) {        
         // Mouse Rotate Amount
-        rotate.activeX  = !!element.offsetRotActive ? (-(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive).toFixed(2) : 0;
-        rotate.activeY  = !!element.offsetRotActive ? ((mouse.x-viewport.x/2) / (viewport.x/2) * 45 * element.offsetRotActive).toFixed(2) : 0;
+        rotate.activeX  = !!element.offsetRotActive ? (-(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive).toFixed(5) : element.rotX;
+        rotate.activeY  = !!element.offsetRotActive ? ((mouse.x-viewport.x/2) / (viewport.x/2) * 45 * element.offsetRotActive).toFixed(5) : element.rotY;
         
         // Mouse Translate Amount
-        translate.activeX   = !!element.offsetTransActive ? ((mouse.x - viewport.x/2) * element.offsetTransActive).toFixed(2) : 0;
-        translate.activeY   = !!element.offsetTransActive ? ((mouse.y - viewport.y/2) * element.offsetTransActive).toFixed(2) : 0;
+        translate.activeX   = !!element.offsetTransActive ? ((mouse.x - viewport.x/2) * element.offsetTransActive).toFixed(5) : 0;
+        translate.activeY   = !!element.offsetTransActive ? ((mouse.y - viewport.y/2) * element.offsetTransActive).toFixed(5) : 0;
     }
     
     function calculateTotal() {
@@ -226,13 +233,13 @@
         if(resetTimeout){
             clearTimeout(resetTimeout);
         }
-
+        
         resetTimeout = setTimeout(() => {
             parallaxElements.forEach(element => {
                 calculatePassive(element);
-                calculateActive(element);
-
-                if(scroll.y > 0 && element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.1) {
+                calculateActive(element);                
+                
+                if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.1) {
                     TweenMax.to(element.el, .8, {
                         x: translate.passiveX,
                         y: translate.passiveY,
@@ -258,20 +265,35 @@
 
         // Get 3D matrix object for element
         let matrix = new WebKitCSSMatrix(style.webkitTransform);
+        
+        // Decompose the matrix values
+        let translationInit = {};
+        
+        ([translationInit.X, translationInit.Y, translationInit.Z] = [matrix.m41, matrix.m42, matrix.m43]);
+        
+        return translationInit;
+    }
+
+    // ONLY DECOMPOSE THE VALUES THAT DON'T CHANGE
+    function decomposeMatrixStatic(element) {
+        // Get style values for parallaxed element
+        let style = window.getComputedStyle(element);
+
+        // Get 3D matrix object for element
+        let matrix = new WebKitCSSMatrix(style.webkitTransform);
 
         // Decompose the matrix values
-        let translationInit = {},
-            rotationInit    = {},
+        let rotationInit    = {},
             scaleInit       = {},
             opacityInit     = style.opacity,
             displayInit     = style.display;
         
-        ([translationInit.X, translationInit.Y, translationInit.Z] = [matrix.m41, matrix.m42, matrix.m43]);
-
         rotationInit.Y = -Math.asin(math.clamp(matrix.m13, -1, 1)) * math.RAD_to_DEG;
-        if (Math.abs(matrix.m13) < 0.99999) {
-            rotationInit.X = Math.atan2(-matrix.m23, matrix.m33) * math.RAD_to_DEG;
-            rotationInit.Z = Math.atan2(-matrix.m12, matrix.m11) * math.RAD_to_DEG;
+        if (Math.abs(matrix.m13) < 0.999999) {
+            // rotationInit.X = Math.atan2(-matrix.m23, matrix.m33) * math.RAD_to_DEG;
+            // rotationInit.Z = Math.atan2(-matrix.m12, matrix.m11) * math.RAD_to_DEG;
+            rotationInit.X = -Math.atan2(matrix.m32, matrix.m33) * math.RAD_to_DEG; // For some reason this gives right values, didnt do the math
+            rotationInit.Z = Math.atan2(matrix.m21, matrix.m11) * math.RAD_to_DEG;
         } else {
             rotationInit.X = Math.atan2(matrix.m32, matrix.m22) * math.RAD_to_DEG;
             rotationInit.Z = 0;
@@ -280,9 +302,9 @@
         scaleInit.X = Math.sqrt(matrix.m11*matrix.m11 + matrix.m12*matrix.m12 + matrix.m13*matrix.m13);
         scaleInit.Y = Math.sqrt(matrix.m21*matrix.m21 + matrix.m22*matrix.m22 + matrix.m23*matrix.m23);
         scaleInit.Z = Math.sqrt(matrix.m31*matrix.m31 + matrix.m32*matrix.m32 + matrix.m33*matrix.m33);
-        
+
         // Returns CURRENT position of element (even if its moving)
-        return {rotationInit, translationInit, scaleInit, opacityInit, displayInit};
+        return {rotationInit, scaleInit, opacityInit, displayInit};
     }
 
     // MATH UTILITY Object

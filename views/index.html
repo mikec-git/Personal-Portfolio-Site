@@ -7,6 +7,7 @@
     <!-- <link rel="shortcut icon" href="../public/img/ico/favicon_16.ico" /> -->
     <link rel="shortcut icon" href="../public/img/ico/favicon_32_3.ico" />
     <link rel="stylesheet" href="../public/css/style.css">    
+    <script src="https://unpkg.com/rematrix"></script>
     <title>Mike Choi | Portfolio</title>
 </head>
 <body class="body">
@@ -28,11 +29,11 @@
     <!-- ========== HEADER SECTION ========== -->
     <header class="header">
         <div class="header__bg">
-            <canvas class="noise"></canvas>
+            <canvas class="noise parallax" data-parallax-opacity="0.1"></canvas>
         </div> 
 
         <div class="header__logo-box">
-            <img class="header__logo parallax" src="../public/img/svg/logo/LionHead_Gray_GoldEyes_Flat2.svg" data-parallax-rotate-active=".4" data-parallax-rotate-passive="0.001" data-parallax-translate-passive="0, 0.1" data-parallax-scale-passive="0.005, 0.005" data-parallax-opacity="0.1">
+            <img class="header__logo parallax" src="../public/img/svg/logo/LionHead_Gray_GoldEyes_Flat2.svg" data-parallax-rotate-active=".4" data-parallax-rotate-passive="0.0008" data-parallax-translate-passive="0, 0.1" data-parallax-scale-passive="0.005, 0.005" data-parallax-opacity="0.1">
         </div>
 
         <h1 class="heading-1 header__title parallax" data-parallax-opacity="0.1" data-parallax-translate-passive="0, -0.1">
@@ -68,7 +69,7 @@
         <!-- ========== ABOUT SECTION ========== -->
         <section class="section-about">
             <div class="u-center-text u-mb-large section-title--about">
-                <h1 class="heading-1">WHO</h1>
+                <h1 class="heading-1 parallax">WHO</h1>
             </div>
             <div class="about">
                 <!-- About main content -->
@@ -106,7 +107,7 @@
         </section>
 
         <!-- ========== SKILLS SECTION ========== -->
-        <section class="section-skills">
+        <section class="section-skills" style="display: none">
             <div class="u-center-text u-mb-largest">
                 <h1 class="heading-1 background-text background-text--skills">SKILLS</h1>
             </div>
@@ -268,7 +269,7 @@
 
     <!-- ======================= MY JAVASCRIPT ======================= -->
     <script src="../public/js/smooth-scroll.js"></script>
-    <script src="../public/js/bg-noise.js"></script>
     <script src="../public/js/parallax.js"></script>
+    <script src="../public/js/bg-noise.js"></script>
 </body>
 </html>
