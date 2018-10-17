@@ -64,10 +64,10 @@
         for(let i = 0; i < length; i++) {
             // Half of the data, at random, will be black
             if(Math.random() < 0.5) {
-                buffer32[i] = 0x66050505;
+                buffer32[i] = 0xaa020202;
                 // buffer32[i] = 0x11050505;
             } else {
-                buffer32[i] = 0xff0e0e0e;
+                buffer32[i] = 0xff050505;
                 // buffer32[i] = 0x110e0e0e;
             }
         }

@@ -1,4 +1,4 @@
-// Main function
+// MAIN FUNCTION
 (function parallax() {    
     // New instance of math helper object
     const math = new mathProto();
@@ -7,9 +7,9 @@
     let parallaxElementsList    = document.querySelectorAll('.parallax'),
         parallaxElements        = [];    
     
-    let mouse           = { x: window.clientX, y: window.clientY },   // Mouse position relative to viewport
-        scroll          = { x: window.pageXOffset, y: window.pageYOffset },   // Document position
-        viewport        = {},   // Viewport width and height
+    let mouse           = { x: window.clientX, y: window.clientY },         // Mouse position relative to viewport
+        scroll          = { x: window.pageXOffset, y: window.pageYOffset }, // Current document scroll position
+        viewport        = {},                           // Viewport width and height
         documentHeight  = document.body.clientHeight;   // Entire document height
     
     // Transform values
@@ -19,7 +19,10 @@
         opacity         = {},
         totalTransform  = {};
 
-    window.addEventListener("DOMContentLoaded", init, false);
+    // Only run if parallax elements exist
+    if(parallaxElementsList.length > 0) {
+        window.addEventListener("DOMContentLoaded", init, false);
+    }
     
     // INIT
     function init() {
@@ -44,7 +47,7 @@
             offsetOpacity = (!!element.dataset.parallaxOpacity) ? regexSeparation(element.dataset.parallaxOpacity)[0] : NaN;
 
             parallaxElements.push({
-                el:         element, 
+                el:         element,                    // Original 
                 rotX:       rotationInit.X.toFixed(5),  //    ||    x-rotation
                 rotY:       rotationInit.Y.toFixed(5),  //    ||    y-rotation
                 scaleX:     scaleInit.X.toFixed(5),     //    ||    x-scale
@@ -52,10 +55,11 @@
                 opacity:    opacityInit,                //    ||    opacity
                 display:    displayInit,                //    ||    display
                 
+                // Parallax values from html dataset
                 offsetRotActive:        Number(element.dataset.parallaxRotateActive),
                 offsetTransActive:      Number(element.dataset.parallaxTranslateActive),
                 
-                offsetRotPassiveX:      Number(offsetRotPassiveX),
+                offsetRotPassiveX:      Number(offsetRotPassiveX),      
                 offsetRotPassiveY:      Number(offsetRotPassiveY),
                 offsetTransPassiveX:    Number(offsetTransPassiveX),
                 offsetTransPassiveY:    Number(offsetTransPassiveY),
@@ -81,15 +85,18 @@
         let length = parallaxElements.length;
         
         for(let i = 0; i < length; i++) {
+
             element = parallaxElements[i];
             translationInit = decomposeMatrix(element.el);
             
             if(element.el.classList.contains("noise")) {
                 translationInit.X = -document.documentElement.clientWidth/2;
             }
-            
-            element.x = translationInit.X;  // Original x-translation
-            element.y = translationInit.Y;  // Original y-translation
+            if(element.el.classList.contains("header__title")) {
+                console.log(translationInit.X);
+            }
+            element.x = translationInit.X;  // Calculated x-translation
+            element.y = translationInit.Y;  //     ||     y-translation
         };
         
         reset();
@@ -123,7 +130,7 @@
                 calculateActive(element);                
                 calculateTotal();
                 
-                if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.1) {
+                if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.05) {
                     TweenMax.to(element.el, 1, {
                         x: totalTransform.translateX,
                         y: totalTransform.translateY,
@@ -142,8 +149,8 @@
         })
     };
 
-    let scrollTimeout = null;
     // SCROLL MOVEMENT SETUP
+    let scrollTimeout = null;
     function scrollSetup() {
         scroll.y = window.pageYOffset; // Vertical scrolled amount
         
@@ -166,7 +173,7 @@
                 calculateTotal();
 
                 // Only triggers transforms if element is inside or below viewport
-                if(element.el.getBoundingClientRect().bottom > 0 && opacity.passive > -0.1) {
+                if(element.el.getBoundingClientRect().bottom > 0 && opacity.passive > -0.05) {
                     TweenMax.to(element.el, 0.3, {
                         x: totalTransform.translateX,
                         y: totalTransform.translateY,
@@ -185,7 +192,18 @@
         });
     };
 
-    function calculatePassive(element){
+    // PINNING PARALLAX
+    function pinElement() {
+        // let scene = new ScrollMagic.Scene({triggerElement: '.section-about', duration: })
+        
+        parallaxElements.forEach(element => {
+            // if(scroll.y = documentHeight*element.pinPercent)
+
+        })
+    }
+
+    // PASSIVE PARALLAX VALUES
+    function calculatePassive(element) {
         // Scroll Rotate Amount
         rotate.passiveX = !!element.offsetRotPassiveX && scroll.y !== 0 ? (-scroll.y * element.offsetRotPassiveX).toFixed(7) : element.rotX;
         rotate.passiveY = !!element.offsetRotPassiveY && scroll.y !== 0 ? (scroll.y * element.offsetRotPassiveY).toFixed(7) : element.rotY;
@@ -199,11 +217,12 @@
         scale.passiveY = !!element.offsetScalePassiveY && scroll.y !== 0 ? ((scroll.y/documentHeight+1) * (1+element.offsetScalePassiveY)).toFixed(5) : element.scaleY;
 
         // Scroll Opacity Amount
-        opacity.passive = !!element.offsetOpacity ? (element.opacity - (scroll.y/documentHeight*100 * element.offsetOpacity)) : element.opacity;
-        element.el.style.display = (opacity.passive < 0) ? 'none' : `${element.display}`; // Disables element if 0 opacity
+        opacity.passive = !!element.offsetOpacity ? (element.opacity - (scroll.y/documentHeight*100 * element.offsetOpacity)).toFixed(7) : element.opacity;
+        element.el.style.display = (opacity.passive < -0.35) ? 'none' : `${element.display}`; // Disables element if 0 opacity
     }
-
-    function calculateActive(element) {        
+    
+    // ACTIVE PARALLAX VALUES
+    function calculateActive(element) {
         // Mouse Rotate Amount
         rotate.activeX  = !!element.offsetRotActive ? (-(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive).toFixed(5) : element.rotX;
         rotate.activeY  = !!element.offsetRotActive ? ((mouse.x-viewport.x/2) / (viewport.x/2) * 45 * element.offsetRotActive).toFixed(5) : element.rotY;
@@ -212,7 +231,8 @@
         translate.activeX   = !!element.offsetTransActive ? ((mouse.x - viewport.x/2) * element.offsetTransActive).toFixed(5) : 0;
         translate.activeY   = !!element.offsetTransActive ? ((mouse.y - viewport.y/2) * element.offsetTransActive).toFixed(5) : 0;
     }
-    
+
+    // TOTAL PARALLAX VALUES
     function calculateTotal() {
         // Sums of active and passive components (limited angles to 20deg)
         totalTransform.rotateX = math.clamp(Number(rotate.passiveX) + Number(rotate.activeX), -15, 15) + '_short';
@@ -239,7 +259,12 @@
                 calculatePassive(element);
                 calculateActive(element);                
                 
-                if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.1) {
+                if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.05) {
+                    if(element.el.classList.contains("header__title")) {
+                        console.log(element.el.getBoundingClientRect().left);
+                        console.log(element.el.getBoundingClientRect().right);
+                    }
+
                     TweenMax.to(element.el, .8, {
                         x: translate.passiveX,
                         y: translate.passiveY,
@@ -264,17 +289,21 @@
         let style = window.getComputedStyle(element);
 
         // Get 3D matrix object for element
+        // let matrix = new WebKitCSSMatrix(style.webkitTransform);
         let matrix = new WebKitCSSMatrix(style.webkitTransform);
         
         // Decompose the matrix values
-        let translationInit = {};
+        let translationInit = {X: matrix.m41, Y: matrix.m42, Z: matrix.m43};   
         
-        ([translationInit.X, translationInit.Y, translationInit.Z] = [matrix.m41, matrix.m42, matrix.m43]);
-        
+        if(element.classList.contains("header__title")) {
+            console.log(matrix);
+        }
+
+        // Returns CURRENT position of element (even if its moving)     
         return translationInit;
     }
 
-    // ONLY DECOMPOSE THE VALUES THAT DON'T CHANGE
+    // DECOMPOSE VALUES THAT SHOULDN'T CHANGE NO MATTER WHAT
     function decomposeMatrixStatic(element) {
         // Get style values for parallaxed element
         let style = window.getComputedStyle(element);
@@ -303,11 +332,10 @@
         scaleInit.Y = Math.sqrt(matrix.m21*matrix.m21 + matrix.m22*matrix.m22 + matrix.m23*matrix.m23);
         scaleInit.Z = Math.sqrt(matrix.m31*matrix.m31 + matrix.m32*matrix.m32 + matrix.m33*matrix.m33);
 
-        // Returns CURRENT position of element (even if its moving)
         return {rotationInit, scaleInit, opacityInit, displayInit};
     }
 
-    // MATH UTILITY Object
+    // MATH UTILITY
     function mathProto() {
         // Radians to degree conversion
         this.RAD_to_DEG =  180 / Math.PI;

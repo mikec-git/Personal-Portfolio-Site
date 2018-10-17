@@ -29,39 +29,48 @@
     <!-- ========== HEADER SECTION ========== -->
     <header class="header">
         <div class="header__bg">
-            <canvas class="noise parallax" data-parallax-opacity="0.1"></canvas>
+            <canvas class="noise parallax" data-parallax-opacity="0.053"></canvas>
         </div> 
 
         <div class="header__logo-box">
-            <img class="header__logo parallax" src="../public/img/svg/logo/LionHead_Gray_GoldEyes_Flat2.svg" data-parallax-rotate-active=".4" data-parallax-rotate-passive="0.0008" data-parallax-translate-passive="0, 0.1" data-parallax-scale-passive="0.005, 0.005" data-parallax-opacity="0.1">
+            <img class="header__logo parallax" src="../public/img/svg/logo/LionHead_Gray_GoldEyes_Flat2.svg" data-parallax-rotate-active=".4" data-parallax-rotate-passive="0.0008" data-parallax-translate-passive="0, 0.1" data-parallax-scale-passive="0.005, 0.005" data-parallax-opacity="0.11">
         </div>
-
-        <h1 class="heading-1 header__title parallax" data-parallax-opacity="0.1" data-parallax-translate-passive="0, -0.1">
-            <div class="header__first-name">
+        
+        <div class="header__main-title">
+            <h1 class="header__first-name parallax" data-parallax-opacity="0.11" data-parallax-translate-passive="0, -0.1">
                 <span class="header__letter header__letter--M parallax" 
                 data-parallax-translate-passive="-0.11, -0.12">M</span>
                 <span class="header__letter header__letter--I parallax" data-parallax-translate-passive="-0.09, -0.08">I</span>
                 <span class="header__letter header__letter--K parallax" data-parallax-translate-passive="-0.07, -0.05">K</span>
                 <span class="header__letter header__letter--E parallax" data-parallax-translate-passive="-0.04, -0.02">E</span>
-            </div>
-            <div class="header__last-name">
+            </h1>
+            <h1 class="header__last-name parallax" data-parallax-opacity="0.11" data-parallax-translate-passive="0, -0.1">
                 <span class="header__letter header__letter--C parallax" data-parallax-translate-passive="0.04, -0.02">C</span>
                 <span class="header__letter header__letter--H parallax" data-parallax-translate-passive="0.07, -0.05">H</span>
                 <span class="header__letter header__letter--O parallax" data-parallax-translate-passive="0.09, -0.08">O</span>
                 <span class="header__letter header__letter--I parallax" data-parallax-translate-passive="0.11, -0.12">I</span>
-            </div>
-        </h1>
-        <h6 class="heading-6 header__subtitle parallax" data-parallax-opacity="0.1" data-parallax-translate-passive="0, -0.1">
-            <span class="header__letter header__letter--D parallax" data-parallax-translate-passive="-0.04">D</span>
-            <span class="header__letter header__letter--E parallax" data-parallax-translate-passive="-0.03">E</span>
-            <span class="header__letter header__letter--V parallax" data-parallax-translate-passive="-0.02">V</span>
-            <span class="header__letter header__letter--E parallax" data-parallax-translate-passive="-0.01">E</span>
-            <span class="header__letter header__letter--L parallax" data-parallax-translate-passive="0">L</span>
-            <span class="header__letter header__letter--O parallax" data-parallax-translate-passive="0.01">O</span>
-            <span class="header__letter header__letter--P parallax" data-parallax-translate-passive="0.02">P</span>
-            <span class="header__letter header__letter--E parallax" data-parallax-translate-passive="0.03">E</span>
-            <span class="header__letter header__letter--R parallax" data-parallax-translate-passive="0.04">R</span>
-        </h6>
+            </h1>
+        </div>
+        <div class="header__secondary-title">
+            <h6 class="header__description parallax" data-parallax-opacity="0.11" data-parallax-translate-passive="0, -0.1">
+                <span class="header__letter header__letter--D parallax" data-parallax-translate-passive="-0.04">D</span>
+                <span class="header__letter header__letter--E parallax" data-parallax-translate-passive="-0.03">E</span>
+                <span class="header__letter header__letter--V parallax" data-parallax-translate-passive="-0.02">V</span>
+                <span class="header__letter header__letter--E parallax" data-parallax-translate-passive="-0.01">E</span>
+                <span class="header__letter header__letter--L parallax" data-parallax-translate-passive="0">L</span>
+                <span class="header__letter header__letter--O parallax" data-parallax-translate-passive="0.01">O</span>
+                <span class="header__letter header__letter--P parallax" data-parallax-translate-passive="0.02">P</span>
+                <span class="header__letter header__letter--E parallax" data-parallax-translate-passive="0.03">E</span>
+                <span class="header__letter header__letter--R parallax" data-parallax-translate-passive="0.04">R</span>
+            </h6>            
+        </div>
+        
+
+        <div class="arrow-down">
+            <div class="arrow-down--top"></div>
+            <div class="arrow-down--middle"></div>
+            <div class="arrow-down--bottom"></div>
+        </div>
     </header>
     
     <!-- ========== MAIN BODY ========== -->
@@ -266,6 +275,7 @@
     <script src="../public/js/lib/TweenMax.min.js"></script>
     <script src="../public/js/lib/ScrollToPlugin.min.js"></script>
     <script src="../public/js/lib/DirectionalRotationPlugin.min.js"></script>
+    <script src="../public/js/lib/ScrollMagic.min.js"></script>
 
     <!-- ======================= MY JAVASCRIPT ======================= -->
     <script src="../public/js/smooth-scroll.js"></script>

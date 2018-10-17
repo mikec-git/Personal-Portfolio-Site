@@ -1,5 +1,5 @@
 .header {
-    height: 300rem;
+    height: 250rem;
     width: 100%;
     position: relative;
     background-color: $color-grey-darker;
@@ -11,11 +11,13 @@
     align-items: center;
     overflow: hidden;
     
+    // HEADER BACKGROUND
     &__bg {
         width: 100%;
         height: 100%;
     }
 
+    // HEADER MAIN LOGO
     &__logo-box {
         display: block;
         max-width: 35rem;
@@ -23,7 +25,7 @@
         max-height: 35rem;
         position: fixed;
         top: 50vh;
-        left: 50vw;
+        left: 50%;
         transform: translate(-50%, -50%);
         z-index: 1;
         perspective: 20rem;
@@ -35,38 +37,45 @@
         animation: logoGlow 5500ms ease-in-out infinite;
     }
 
-    &__title,
-    &__subtitle {
+    // HEADER TITLES
+    &__main-title,
+    &__secondary-title {
         display: inline-block;
-        letter-spacing: 0rem;
-        text-transform: uppercase;
-        text-align: center;
+        width: 100%;
         position: fixed;
-        left: 50vw; 
+        left: 50%; 
         transform: translate(-50%, -50%);
+        z-index: 2;
+        text-align: center;
+        letter-spacing: 0rem;
+        line-height: 1;
+        text-transform: uppercase;
         filter: invert(1);
     }
 
-    &__title {
+    &__main-title {
+        top: 57vh;
+    }
+
+    &__secondary-title { 
+        top: 62vh;
+    }    
+    
+    // HEADER FIRST/LAST NAME
+    &__first-name,
+    &__last-name {
+        display: inline-block;
         font-size: 6rem;
-        z-index: 2;
-        top: 55vh;
+        font-weight: 600;
     }
 
     &__first-name {
-        display: inline-block;
         margin-right: 3rem;
     }
-
-    &__last-name {
-        display: inline-block;
-    }
-
-    &__subtitle {
+    
+    &__description {
         font-size: 2.5rem;
-        z-index: 2;
-        top: 60vh;
-        font-weight: 600;
+        font-weight: 300;
     }
     
     &__letter {

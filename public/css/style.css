@@ -268,7 +268,7 @@ body {
   background-color: #454445; }
 
 .header {
-  height: 300rem;
+  height: 250rem;
   width: 100%;
   position: relative;
   background-color: #1F1F1F;
@@ -288,7 +288,7 @@ body {
     max-height: 35rem;
     position: fixed;
     top: 50vh;
-    left: 50vw;
+    left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1;
     perspective: 20rem; }
@@ -296,29 +296,31 @@ body {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     animation: logoGlow 5500ms ease-in-out infinite; }
-  .header__title, .header__subtitle {
+  .header__main-title, .header__secondary-title {
     display: inline-block;
-    letter-spacing: 0rem;
-    text-transform: uppercase;
-    text-align: center;
+    width: 100%;
     position: fixed;
-    left: 50vw;
+    left: 50%;
     transform: translate(-50%, -50%);
+    z-index: 2;
+    text-align: center;
+    letter-spacing: 0rem;
+    line-height: 1;
+    text-transform: uppercase;
     filter: invert(1); }
-  .header__title {
-    font-size: 6rem;
-    z-index: 2;
-    top: 55vh; }
-  .header__first-name {
+  .header__main-title {
+    top: 57vh; }
+  .header__secondary-title {
+    top: 62vh; }
+  .header__first-name, .header__last-name {
     display: inline-block;
-    margin-right: 3rem; }
-  .header__last-name {
-    display: inline-block; }
-  .header__subtitle {
-    font-size: 2.5rem;
-    z-index: 2;
-    top: 60vh;
+    font-size: 6rem;
     font-weight: 600; }
+  .header__first-name {
+    margin-right: 3rem; }
+  .header__description {
+    font-size: 2.5rem;
+    font-weight: 300; }
   .header__letter {
     display: inline-block; }
 
