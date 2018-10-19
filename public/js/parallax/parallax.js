@@ -1,18 +1,12 @@
 // MAIN FUNCTION
-(function parallax() {
-    // MATH UTILITY
-    function mathProto() {
-        this.RAD_to_DEG =  180 / Math.PI; // Radians to degree conversion
-    };    
-    mathProto.prototype.clamp = function(num, min, max) { // Clamps number to min or max value
-        return Math.min(Math.max(num, min), max);
-    };
-    
+(function parallax() {    
     const math = new mathProto(); // New instance of helper objects
     
     let mouse           = { x: window.clientX, y: window.clientY }, // Mouse position relative to viewport
-        scroll          = { x: window.pageXOffset, y: window.pageYOffset }, // Current document scroll position
-        viewport        = { x: document.documentElement.clientWidth, y: document.documentElement.clientHeight},
+        scroll          = { x: window.pageXOffset, 
+                            y: window.pageYOffset }, // Current document scroll position
+        viewport        = { x: document.documentElement.clientWidth, 
+                            y: document.documentElement.clientHeight},
         documentHeight  = document.body.clientHeight;
         
         // All parallax elements
@@ -35,16 +29,13 @@
     function init() {
         parallaxElementsList.forEach(element => assignStaticProperties(element));
         assignTranslateProperties();
-        reset();
 
         window.addEventListener('mousemove', mouseSetup, false);
         window.addEventListener('scroll', scrollSetup, false);        
         window.addEventListener('mousewheel', scrollSetup, false);        
         window.addEventListener('DOMMouseScroll', scrollSetup, false);
         window.addEventListener('mouseout', reset, false);
-        window.addEventListener('resize', () => {
-            parallaxElements.forEach(element => assignTranslateProperties(element.el));
-        }, false);
+        window.addEventListener('resize',assignTranslateProperties, false);
     };
 
     function assignStaticProperties(element) {
@@ -134,7 +125,7 @@
             calculateActive(element);                
             calculateTotal();
             
-            if(element.hasActive && element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.5) {
+            if(element.hasActive && element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.5 && window.getComputedStyle(element.el.parentElement).visibility !== 'hidden') {
                 TweenMax.to(element.el, 1, {
                     x: totalTransform.translateX,
                     y: totalTransform.translateY,
@@ -172,9 +163,9 @@
                 calculatePassive(element);
                 calculateActive(element);
                 calculateTotal();
-                
+
                 // Only triggers transforms if element is inside or below viewport
-                if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.5) {
+                if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.5 && window.getComputedStyle(element.el.parentElement).visibility !== 'hidden') {
                     TweenMax.to(element.el, 0.3, {
                         x: totalTransform.translateX,
                         y: totalTransform.translateY,
@@ -214,8 +205,8 @@
     // ACTIVE PARALLAX VALUES
     function calculateActive(element) {
         // Mouse Rotate Amount
-        rotate.activeX  = !!element.offsetRotActive ? (-(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive).toFixed(5) : element.rotX;
-        rotate.activeY  = !!element.offsetRotActive ? ((mouse.x-viewport.x/2) / (viewport.x/2) * 45 * element.offsetRotActive).toFixed(5) : element.rotY;
+        rotate.activeX  = !!element.offsetRotActive ? (-(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive).toFixed(5) : 0;
+        rotate.activeY  = !!element.offsetRotActive ? ((mouse.x-viewport.x/2) / (viewport.x/2) * 45 * element.offsetRotActive).toFixed(5) : 0;
         
         // Mouse Translate Amount
         translate.activeX   = !!element.offsetTransActive ? ((mouse.x - viewport.x/2) * element.offsetTransActive).toFixed(5) : 0;
@@ -233,8 +224,6 @@
 
         totalTransform.scaleX   = scale.passiveX;
         totalTransform.scaleY   = scale.passiveY;
-
-        totalTransform.opacity  = opacity.passive;
     }
 
     // RESET
@@ -249,7 +238,7 @@
                 calculatePassive(element);
                 calculateActive(element);      
                 
-                if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.5) {
+                if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && window.getComputedStyle(element.el.parentElement).visibility !== 'hidden') {
                     TweenMax.to(element.el, .8, {
                         x: translate.passiveX,
                         y: translate.passiveY,
@@ -267,35 +256,4 @@
             });            
         }, 10);
     };
-
-    // DECOMPOSE VALUES THAT SHOULDN'T CHANGE NO MATTER WHAT
-    // function decomposeMatrixStatic(element) {
-    //     // Get style values for parallaxed element
-    //     let style = window.getComputedStyle(element);
-    //     // Get 3D matrix object for element
-    //     let matrix = new WebKitCSSMatrix(style.webkitTransform);
-
-    //     // Decompose the matrix values
-    //     let rotationInit    = {},
-    //         scaleInit       = {},
-    //         opacityInit     = style.opacity,
-    //         displayInit     = style.display;
-        
-    //     rotationInit.Y = -Math.asin(math.clamp(matrix.m13, -1, 1)) * math.RAD_to_DEG;
-    //     if (Math.abs(matrix.m13) < 0.999999) {
-    //         // rotationInit.X = Math.atan2(-matrix.m23, matrix.m33) * math.RAD_to_DEG;
-    //         // rotationInit.Z = Math.atan2(-matrix.m12, matrix.m11) * math.RAD_to_DEG;
-    //         rotationInit.X = -Math.atan2(matrix.m32, matrix.m33) * math.RAD_to_DEG; // For some reason this gives correct values, didnt do the math
-    //         rotationInit.Z = Math.atan2(matrix.m21, matrix.m11) * math.RAD_to_DEG;
-    //     } else {
-    //         rotationInit.X = Math.atan2(matrix.m32, matrix.m22) * math.RAD_to_DEG;
-    //         rotationInit.Z = 0;
-    //     }
-        
-    //     scaleInit.X = Math.sqrt(matrix.m11*matrix.m11 + matrix.m12*matrix.m12 + matrix.m13*matrix.m13);
-    //     scaleInit.Y = Math.sqrt(matrix.m21*matrix.m21 + matrix.m22*matrix.m22 + matrix.m23*matrix.m23);
-    //     scaleInit.Z = Math.sqrt(matrix.m31*matrix.m31 + matrix.m32*matrix.m32 + matrix.m33*matrix.m33);
-
-    //     return {rotationInit, scaleInit, opacityInit, displayInit};
-    // }
 })();

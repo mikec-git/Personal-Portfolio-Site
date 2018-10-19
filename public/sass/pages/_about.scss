@@ -2,10 +2,16 @@
     max-width: $max-content-width;
     margin: 0 auto;
     display: flex;
+    flex-direction: column;
     position: relative;
 
     &__column {
         position: relative;
         z-index: 3;
+    }
+
+    &__title {
+        position: relative;
+        z-index: 1;
     }
 }

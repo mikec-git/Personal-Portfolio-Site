@@ -118,10 +118,6 @@ body {
   font-weight: 300;
   line-height: 1; }
 
-.section-title--about {
-  position: relative;
-  z-index: 2; }
-
 .background-text--about {
   z-index: 1; }
 
@@ -359,14 +355,19 @@ body::-webkit-resizer {
   max-width: 110rem;
   margin: 0 auto;
   display: flex;
+  flex-direction: column;
   position: relative; }
   .about__column {
     position: relative;
     z-index: 3; }
+  .about__title {
+    position: relative;
+    z-index: 1; }
 
 .section-about {
   margin-top: -80rem;
-  padding: 15rem 5rem; }
+  padding: 15rem 5rem;
+  z-index: 1; }
 
 .section-projects {
   color: white;

@@ -1,45 +1,39 @@
-// function parallaxScene(element, option, variables) {
+// window.addEventListener('scroll', individualParallaxSetup, false);        
+// window.addEventListener('mousewheel', individualParallaxSetup, false);        
+// window.addEventListener('DOMMouseScroll', individualParallaxSetup, false);
 
-// }
+let smController    = new ScrollMagic.Controller(),
+    cornerLogo      = document.querySelector('.logo-box'),
+    aboutTitle      = document.querySelector('.about__title'),
+    header          = document.querySelector('.header');
 
-window.addEventListener('scroll', individualParallaxSetup, false);        
-window.addEventListener('mousewheel', individualParallaxSetup, false);        
-window.addEventListener('DOMMouseScroll', individualParallaxSetup, false);
+let documentHeight  = document.body.clientHeight,
+    viewport        = {x: document.documentElement.clientWidth, y: document.documentElement.clientHeight};
 
-let cornerLogo = document.querySelector('.logo-box'),
-    aboutTitle = document.querySelector('.section-title--about');
 
-let documentHeight = document.body.clientHeight;
-let scroll = {};
-let viewport = {}
+let sectionProjectsMid =  document.querySelector('.about').clientHeight + aboutTitle.clientHeight;
 
-function individualParallaxSetup() {
-    scroll.y = window.pageYOffset;
-    viewport.y = document.documentElement.clientHeight;
 
-    if(scroll.y/documentHeight > 0.1) {
-        TweenMax.to(cornerLogo, 0.5, {
-            autoAlpha: 1,
-            ease: Power3.easeOut
-        });
-    } else {
-        TweenMax.to(cornerLogo, 0.5, {
-            autoAlpha: 0,
-            ease: Power3.easeOut
-        });
-    }
-    
-    let elementCenter = aboutTitle.getBoundingClientRect().top + aboutTitle.clientHeight/2;
-    let distFromCenter = Math.round(elementCenter - viewport.y/2);
-    // console.log(distFromCenter);
-    // console.log(Math.abs(distFromCenter));
-    // if(section)
-    // if(distFromCenter <= 0 && distFromCenter > -5 && Math.abs(distFromCenter) < 300) {
-    //     aboutTitle.style.position = 'fixed';
-    //     aboutTitle.style.top = '50%';
-    //     aboutTitle.style.left = '50%';
-    //     aboutTitle.style.transform = 'translate(-50%, -50%)';
-    // } else {
-    //     aboutTitle.style.position = 'relative';
-    // }
-}
+let aboutTitleIntro = new ScrollMagic.Scene({
+    triggerElement: ".about__title", 
+    duration: sectionProjectsMid,
+    reverse: true
+    })
+    .triggerHook(0.5)
+    .offset(aboutTitle.clientHeight/2)
+    .setPin(".about__title", {pushFollowers: false})
+    .addIndicators({ name: 'triggerStart' })
+    .addTo(smController);
+
+let cornerLogoTween = TweenMax.to(cornerLogo, 0.5, {
+    autoAlpha: 1,
+    ease: Power3.easeOut
+});
+
+let cornerLogoToggle = new ScrollMagic.Scene({
+    triggerElement: ".header",
+    offset: header.clientHeight/2,
+    reverse: true
+    })
+    .setTween(cornerLogoTween)
+    .addTo(smController);
