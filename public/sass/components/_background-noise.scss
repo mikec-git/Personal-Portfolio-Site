@@ -5,3 +5,13 @@
     @include centerAbsolute;
     z-index: 0;
 }
+
+.noise-body {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+    background-color: $color-grey-darker;
+}

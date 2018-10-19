@@ -11,26 +11,31 @@
     <title>Mike Choi | Portfolio</title>
 </head>
 <body class="body">
+    <!-- BODY BACKGROUND NOISE -->
+    <div class="noise-body">
+        <canvas class="noise"></canvas>
+    </div>
+
     <!-- ========== LOADING SCREEN ========== -->
     <!-- <div class="loading">
         LOADING ANIMATION
     </div> -->
     
     <!-- ========== NAVIGATION BAR ========== -->
-    <div class="navigation">
+    <!-- <div class="navigation">
         NAVIGATION 
-    </div>
+    </div> -->
 
     <!-- ========== TOP CORNER LOGO ========== -->
     <div class="logo-box">
         <img class="logo" src="../public/img/svg/logo/LionHead_Gray_GoldEyes_Flat2.svg">
-    </div>    
-    
+    </div>
+
     <!-- ========== HEADER SECTION ========== -->
     <header class="header">
-        <div class="header__bg">
-            <canvas class="noise parallax" data-parallax-opacity="0.053"></canvas>
-        </div> 
+        <!-- <div class="header__bg"> -->
+            <!-- <canvas class="noise parallax" data-parallax-opacity="0.053"></canvas> -->
+        <!-- </div>  -->
 
         <div class="header__logo-box">
             <img class="header__logo parallax" src="../public/img/svg/logo/LionHead_Gray_GoldEyes_Flat2.svg" data-parallax-rotate-active=".4" data-parallax-rotate-passive="0.0008" data-parallax-translate-passive="0, 0.1" data-parallax-scale-passive="0.005, 0.005" data-parallax-opacity="0.11">
@@ -66,19 +71,19 @@
         </div>
         
 
-        <div class="arrow-down">
+        <!-- <div class="arrow-down">
             <div class="arrow-down--top"></div>
             <div class="arrow-down--middle"></div>
             <div class="arrow-down--bottom"></div>
-        </div>
+        </div> -->
     </header>
     
     <!-- ========== MAIN BODY ========== -->
     <main class="main">
         <!-- ========== ABOUT SECTION ========== -->
         <section class="section-about">
-            <div class="u-center-text u-mb-large section-title--about">
-                <h1 class="heading-1 parallax">WHO</h1>
+            <div class="u-center-text u-mb-large">
+                <h1 class="heading-1 section-title--about">WHO</h1>
             </div>
             <div class="about">
                 <!-- About main content -->
@@ -273,13 +278,15 @@
    
     <!-- ======================= VENDOR JAVASCRIPT ======================= -->
     <script src="../public/js/lib/TweenMax.min.js"></script>
+    <script src="../public/js/lib/TimelineMax.min.js"></script>
     <script src="../public/js/lib/ScrollToPlugin.min.js"></script>
     <script src="../public/js/lib/DirectionalRotationPlugin.min.js"></script>
     <script src="../public/js/lib/ScrollMagic.min.js"></script>
 
     <!-- ======================= MY JAVASCRIPT ======================= -->
     <script src="../public/js/smooth-scroll.js"></script>
-    <script src="../public/js/parallax.js"></script>
+    <script src="../public/js/parallax/parallax.js"></script>
+    <script src="../public/js/parallax/parallax-scene.js"></script>
     <script src="../public/js/bg-noise.js"></script>
 </body>
 </html>

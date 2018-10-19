@@ -149,6 +149,15 @@ body {
   transform: translate(-50%, -50%);
   z-index: 0; }
 
+.noise-body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+  background-color: #1F1F1F; }
+
 .column-text {
   display: grid;
   justify-items: center;
@@ -185,7 +194,9 @@ body {
   top: 3rem;
   left: 3rem;
   transition: all 250ms ease-out, background-color 150ms ease-in;
-  cursor: pointer; }
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden; }
   .logo-box::before {
     content: '';
     position: absolute;
@@ -271,7 +282,6 @@ body {
   height: 250rem;
   width: 100%;
   position: relative;
-  background-color: #1F1F1F;
   display: grid;
   justify-content: center;
   align-content: center;
@@ -283,8 +293,8 @@ body {
     height: 100%; }
   .header__logo-box {
     display: block;
-    max-width: 35rem;
-    width: 100%;
+    max-width: 85%;
+    width: 35rem;
     max-height: 35rem;
     position: fixed;
     top: 50vh;
@@ -355,22 +365,17 @@ body::-webkit-resizer {
     z-index: 3; }
 
 .section-about {
-  padding: 15rem 5rem;
-  height: 100%;
-  position: relative;
-  background-color: #1f1f1f; }
+  margin-top: -80rem;
+  padding: 15rem 5rem; }
 
 .section-projects {
-  background-color: #1f1f1f;
   color: white;
   padding: 20rem 0; }
 
 .section-skills {
-  background-color: #1f1f1f;
   padding: 20rem 0; }
 
 .section-contact {
-  background-color: #1f1f1f;
   color: black;
   padding: 20rem 0; }
 

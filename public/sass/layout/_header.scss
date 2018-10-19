@@ -2,7 +2,6 @@
     height: 250rem;
     width: 100%;
     position: relative;
-    background-color: $color-grey-darker;
 
     display: grid;
     justify-content: center;
@@ -20,8 +19,8 @@
     // HEADER MAIN LOGO
     &__logo-box {
         display: block;
-        max-width: 35rem;
-        width: 100%;
+        max-width: 85%;
+        width: 35rem;
         max-height: 35rem;
         position: fixed;
         top: 50vh;
