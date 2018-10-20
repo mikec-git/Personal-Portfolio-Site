@@ -366,12 +366,13 @@ body::-webkit-resizer {
 
 .section-about {
   margin-top: -80rem;
-  padding: 15rem 5rem;
+  padding: 15rem 0;
   z-index: 1; }
 
 .section-projects {
-  color: white;
-  padding: 20rem 0; }
+  margin-top: -20rem;
+  padding: 20rem 0;
+  z-index: 1; }
 
 .section-skills {
   padding: 20rem 0; }
@@ -379,6 +380,16 @@ body::-webkit-resizer {
 .section-contact {
   color: black;
   padding: 20rem 0; }
+
+.projects {
+  max-width: 110rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  position: relative; }
+  .projects__title {
+    position: relative;
+    z-index: 1; }
 
 .skills {
   margin: 0 auto;
