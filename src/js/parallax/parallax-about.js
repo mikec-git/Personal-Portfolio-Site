@@ -1,13 +1,3 @@
-let smController    = new ScrollMagic.Controller(),
-    cornerLogo      = document.querySelector('.logo-box'),
-    header          = document.querySelector('.header'),
-    aboutTitle      = document.querySelector('.about__title'),
-    projectsTitle   = document.querySelector('.projects__title');
-
-let documentHeight  = document.body.clientHeight,
-    viewport        = {x: document.documentElement.clientWidth, y: document.documentElement.clientHeight};
-let regex = /\d+/g;
-
 // CORNER LOGO
 let cornerLogoTween = TweenMax.to(cornerLogo, 0.5, {
     autoAlpha: 1,
@@ -24,32 +14,42 @@ let cornerLogoToggle = new ScrollMagic.Scene({
     
 // ABOUT TITLE
 let aboutSectionPaddingBottom = regex.exec(window.getComputedStyle(document.querySelector('.section-about')).padding)[0];
-let sectionAboutEnd =  document.querySelector('.section-about').clientHeight - Number(aboutSectionPaddingBottom);
+let sectionAboutEnd           =  document.querySelector('.section-about').clientHeight - Number(aboutSectionPaddingBottom);
 
-let aboutTitleFadeIn = new TweenMax.from(aboutTitle, 0.0005, {
-        autoAlpha: 0,
-        ease: Power3.easeIn
-    });
-let aboutTitleFadeOut = new TweenMax.to(aboutTitle, 0.0005, {
-        visibility: 'hidden'
-    });
+let aboutTitleFadeIn    = new TimelineMax(),
+    aboutTitleFadeOut   = new TimelineMax(),
+    aboutSceneEnd       = new TimelineMax();
+
+aboutTitleFadeIn.from(aboutTitle, 0.000001, { autoAlpha: 0 });
+aboutTitleFadeOut.to(aboutTitle, 0.000001, { autoAlpha: 0 });
+aboutSceneEnd
+    .to(noiseCanvas, 0.5, { autoAlpha: 0, ease: Quad.easeOut})
+    .to(noiseContainer, 0.5, { backgroundColor: 'gray', ease: Quad.easeOut }, 0);
 
 new ScrollMagic.Scene({
     triggerElement: ".about__title",
     offset: aboutTitle.clientHeight/2,
     reverse: true
-    })
-    .setTween(aboutTitleFadeIn)
+})
+.setTween(aboutTitleFadeIn)
+.triggerHook(0.5)
+.addIndicators({ name: 'aboutTitlePinIn', indent: 200 })
+.addTo(smController);
+
+new ScrollMagic.Scene({
+    triggerElement: ".about__title",
+    offset: sectionAboutEnd + aboutTitle.clientHeight/2,
+    reverse: true })
+    .setTween(aboutTitleFadeOut)
     .triggerHook(0.5)
-    .addIndicators({ name: 'aboutTitlePinIn', indent: 200 })
+    .addIndicators({ name: 'aboutTitleFadeOut', indent: 700 })
     .addTo(smController);
 
 new ScrollMagic.Scene({
     triggerElement: ".about__title",
     offset: sectionAboutEnd + aboutTitle.clientHeight/2,
-    reverse: true
-    })
-    .setTween(aboutTitleFadeOut)
+    reverse: true })
+    .setTween(aboutSceneEnd)
     .triggerHook(0.5)
     .addIndicators({ name: 'aboutTitlePinOut', indent: 200, colorStart: 'red' })
     .addTo(smController);
@@ -58,8 +58,7 @@ let aboutTitlePin = new ScrollMagic.Scene({
     triggerElement: ".about__title", 
     duration: sectionAboutEnd,
     offset: aboutTitle.clientHeight/2,
-    reverse: true
-    })
+    reverse: true })
     .triggerHook(0.5)
     .setPin(".about__title", {pushFollowers: false})
     .addIndicators({ name: 'aboutTitlePin' })
@@ -67,20 +66,15 @@ let aboutTitlePin = new ScrollMagic.Scene({
 
 // PROJECTS TITLE
 let projectsSectionPaddingTop = window.getComputedStyle(document.querySelector('.section-projects')).padding.match(regex)[0];
-let sectionProjectsEnd =  document.querySelector('.projects').clientHeight + Number(projectsSectionPaddingTop);
+let sectionProjectsEnd        =  document.querySelector('.projects').clientHeight + Number(projectsSectionPaddingTop);
 
-let projectsTitleFadeIn = new TweenMax.from(projectsTitle, 0.0005, {
-    visibility: 'hidden'
-});
-let projectsTitleFadeOut = new TweenMax.to(projectsTitle, 0.0005, {
-    visibility: 'hidden'
-});
+let projectsTitleFadeIn     = new TweenMax.from(projectsTitle, 0.000001, { autoAlpha: 1 });
+let projectsTitleFadeOut    = new TweenMax.to(projectsTitle, 0.000001, { autoAlpha: 0 });
 
 new ScrollMagic.Scene({
     triggerElement: ".projects__title",
     offset: projectsTitle.clientHeight/2,
-    reverse: true
-    })
+    reverse: true })
     .setTween(projectsTitleFadeIn)
     .triggerHook(0.5)
     .addIndicators({ name: 'projectsTitlePinIn', indent: 200 })
@@ -89,8 +83,7 @@ new ScrollMagic.Scene({
 new ScrollMagic.Scene({
     triggerElement: ".projects__title",
     offset: sectionProjectsEnd + projectsTitle.clientHeight/2,
-    reverse: true
-    })
+    reverse: true })
     .setTween(projectsTitleFadeOut)
     .triggerHook(0.5)
     .addIndicators({ name: 'projectsTitlePinOut', indent: 200, colorStart: 'red' })
@@ -100,11 +93,8 @@ let projectsTitlePin = new ScrollMagic.Scene({
     triggerElement: ".projects", 
     duration: sectionProjectsEnd,
     offset: projectsTitle.clientHeight/2,
-    reverse: true
-    })
+    reverse: true })
     .triggerHook(0.5)
     .setPin(".projects__title", {pushFollowers: false})
     .addIndicators({ name: 'projectsTitlePin', indent: 400})
     .addTo(smController);
-
-    console.log(projectsSectionPaddingTop);

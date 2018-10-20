@@ -54,7 +54,7 @@
         runLoop();
     }
     
-    function generateData() {
+    function generateData(color = {first: 0xaa0f0f0f, second: 0xff050505} ) {
         // Create the image data object
         let idata = ctx.createImageData(windowWidth, windowHeight);
         // Initialized view with all values of 0
@@ -64,11 +64,10 @@
         for(let i = 0; i < length; i++) {
             // Half of the data, at random, will be black
             if(Math.random() < 0.5) {
-                buffer32[i] = 0xaa020202;
-                // buffer32[i] = 0x11050505;
+                buffer32[i] = color.first;
             } else {
-                buffer32[i] = 0xff050505;
-                // buffer32[i] = 0x110e0e0e;
+                buffer32[i] = color.second;
+                color.second 
             }
         }
         

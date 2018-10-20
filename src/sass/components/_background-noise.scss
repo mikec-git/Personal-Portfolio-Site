@@ -4,6 +4,9 @@
     height: 100%;
     @include centerAbsolute;
     z-index: 0;
+    background-color: $color-grey-darker;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .noise-body {
@@ -13,5 +16,6 @@
     bottom: 0;
     right: 0;
     z-index: 1;
-    background-color: $color-grey-darker;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }

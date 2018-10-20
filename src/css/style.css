@@ -143,7 +143,10 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 0; }
+  z-index: 0;
+  background-color: #1F1F1F;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden; }
 
 .noise-body {
   position: fixed;
@@ -152,7 +155,8 @@ body {
   bottom: 0;
   right: 0;
   z-index: 1;
-  background-color: #1F1F1F; }
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden; }
 
 .column-text {
   display: grid;
@@ -362,7 +366,9 @@ body::-webkit-resizer {
     z-index: 3; }
   .about__title {
     position: relative;
-    z-index: 1; }
+    z-index: 1;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden; }
 
 .section-about {
   margin-top: -80rem;
@@ -378,7 +384,6 @@ body::-webkit-resizer {
   padding: 20rem 0; }
 
 .section-contact {
-  color: black;
   padding: 20rem 0; }
 
 .projects {
@@ -389,7 +394,9 @@ body::-webkit-resizer {
   position: relative; }
   .projects__title {
     position: relative;
-    z-index: 1; }
+    z-index: 1;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden; }
 
 .skills {
   margin: 0 auto;
