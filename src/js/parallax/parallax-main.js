@@ -1,12 +1,9 @@
-let smController    = new ScrollMagic.Controller(),
-    cornerLogo      = document.querySelector('.logo-box'),
-    header          = document.querySelector('.header'),
-    aboutTitle      = document.querySelector('.about__title'),
-    projectsTitle   = document.querySelector('.projects__title'),
-    noiseContainer  = document.querySelector('.noise-body'),
-    noiseCanvas     = document.querySelector('.noise');
+import { smCtrl } from './parallax-controller';
+import { headerParallax } from './parallax-header';
+import { aboutParallax } from './parallax-about';
+import { projectsParallax } from './parallax-projects';
 
-let documentHeight  = document.body.clientHeight,
-    viewport        = {x: document.documentElement.clientWidth, y: document.documentElement.clientHeight};
 
-let regex           = /\d+/g;
+smCtrl.addToCtrl(headerParallax);
+smCtrl.addToCtrl(aboutParallax);
+smCtrl.addToCtrl(projectsParallax);

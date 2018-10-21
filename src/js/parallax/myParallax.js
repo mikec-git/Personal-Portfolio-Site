@@ -1,7 +1,7 @@
+import mathUtil from '../math-util';
+
 // MAIN FUNCTION
-(function parallax() {    
-    const math = new mathProto(); // New instance of helper objects
-    
+(function parallax() {        
     let mouse           = { x: window.clientX, y: window.clientY }, // Mouse position relative to viewport
         scroll          = { x: window.pageXOffset, 
                             y: window.pageYOffset }, // Current document scroll position
@@ -135,7 +135,7 @@
                     },
                     scaleX: totalTransform.scaleX,
                     scaleY: totalTransform.scaleY,
-                    autoAlpha: math.clamp(opacity.passive, 0, 1),
+                    autoAlpha: mathUtil.Clamp(opacity.passive, 0, 1),
                     ease: Power2.easeOut,
                     overwrite: 0
                 });
@@ -175,7 +175,7 @@
                         },
                         scaleX: totalTransform.scaleX,
                         scaleY: totalTransform.scaleY,
-                        autoAlpha: math.clamp(opacity.passive, 0, 1),
+                        autoAlpha: mathUtil.Clamp(opacity.passive, 0, 1),
                         ease: Power0.easeOut,
                         overwrite: 2
                     })
@@ -216,8 +216,8 @@
     // TOTAL PARALLAX VALUES
     function calculateTotal() {
         // Sums of active and passive components (limited angles to 20deg)
-        totalTransform.rotateX = math.clamp(Number(rotate.passiveX) + Number(rotate.activeX), -15, 15) + '_short';
-        totalTransform.rotateY = math.clamp(Number(rotate.passiveY) + Number(rotate.activeY), -15, 15) + '_short';
+        totalTransform.rotateX = mathUtil.Clamp(Number(rotate.passiveX) + Number(rotate.activeX), -15, 15) + '_short';
+        totalTransform.rotateY = mathUtil.Clamp(Number(rotate.passiveY) + Number(rotate.activeY), -15, 15) + '_short';
 
         totalTransform.translateX = translate.passiveX + translate.activeX;
         totalTransform.translateY = translate.passiveY + translate.activeY;
@@ -249,7 +249,7 @@
                         },
                         scaleX: scale.passiveX,
                         scaleY: scale.passiveX,
-                        autoAlpha: math.clamp(opacity.passive, 0, 1),
+                        autoAlpha: mathUtil.Clamp(opacity.passive, 0, 1),
                         ease: Quad.easeOut,
                         overwrite: 3
                     });
