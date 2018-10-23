@@ -6,7 +6,7 @@
     window.addEventListener('DOMMouseScroll', scroll, false);
     
     function scroll(e) {
-        if(!e.ctrlKey) { // Check if user wants to zoom screen
+        if(!e.ctrlKey && !e.shiftKey) { // Check if user wants to zoom screen
             e = e || window.event; // old IE support
             
             let delta = Math.max(-1, Math.min(1, (e.deltaY || e.detail)));

@@ -1,0 +1,23 @@
+.btn {
+    &,
+    &:link,
+    &:visited {        
+        display: inline-block;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: black;
+        background-color: yellow;
+        font-size: $default-font-size;
+
+        padding: 1.5rem 2.5rem;
+        border: none;
+        cursor: pointer;
+
+    }
+
+}
+
+.btn-info {
+    position: relative;
+    z-index: 2;
+}

@@ -67,7 +67,6 @@
                 buffer32[i] = color.first;
             } else {
                 buffer32[i] = color.second;
-                color.second 
             }
         }
         

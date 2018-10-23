@@ -5,19 +5,17 @@ const aboutParallax = (function() {
     let sectionAbout    = document.querySelector('.section-about'),
         aboutMain       = document.querySelector('.about'),
         aboutTitle      = document.querySelector('.about__title'),
-        noiseContainer  = document.querySelector('.noise-body'),
-        noiseCanvas     = document.querySelector('.noise');
+        noiseContainer  = document.querySelector('.noise-body');
 
     let aboutScenes = [];
 
-    let aboutPaddingBottom = regex.exec(window.getComputedStyle(sectionAbout).padding)[0];
+    let aboutPaddingBottom = regex.exec(window.getComputedStyle(sectionAbout).paddingBottom) || regex.exec(window.getComputedStyle(sectionAbout).padding)[0];
     let sectionAboutEnd    = aboutMain.clientHeight + Number(aboutPaddingBottom);    
     
     let aboutTitleFadeIn    = new TweenMax.from(aboutTitle, 0.000001, { autoAlpha: 0 });
     let aboutTitleFadeOut   = new TweenMax.to(aboutTitle, 0.000001, { autoAlpha: 0 }); 
-    let aboutSceneEnd       = new TimelineMax();
-        aboutSceneEnd.to(noiseCanvas, 0.5, { autoAlpha: 0, ease: Quad.easeOut}, 0)
-                     .to(noiseContainer, 0.5, { backgroundColor: 'white', ease: Linear }, 0);  
+    let aboutSceneStart = new TweenMax.to(noiseContainer, 0.4,{ backgroundColor: '#aaa', ease: Quad.easeIn });
+    let aboutSceneEnd   = new TweenMax.to(noiseContainer, 0.4,{ backgroundColor: '#111', ease: Quad.easeIn });
 
     aboutScenes.push(
         // PIN ABOUT TITLE
@@ -28,7 +26,7 @@ const aboutParallax = (function() {
             reverse: true })
             .triggerHook(0.5)
             .setPin(".about__title", {pushFollowers: false})
-            .addIndicators({ name: 'aboutTitlePin' }),
+            .addIndicators({ name: 'titlePin' }),
 
         // FADE IN ABOUT TITLE
         new ScrollMagic.Scene({
@@ -37,8 +35,8 @@ const aboutParallax = (function() {
             reverse: true })
             .setTween(aboutTitleFadeIn)
             .triggerHook(0.5)
-            .addIndicators({ name: 'aboutTitlePinIn', indent: 200 }),
-
+            .addIndicators({ name: 'titleFadeIn', indent: 200 }),
+            
         // FADE OUT ABOUT TITLE
         new ScrollMagic.Scene({
             triggerElement: ".about__title",
@@ -46,16 +44,25 @@ const aboutParallax = (function() {
             reverse: true })
             .setTween(aboutTitleFadeOut)
             .triggerHook(0.5)
-            .addIndicators({ name: 'aboutTitleFadeOut', indent: 700 }),
+            .addIndicators({ name: 'titleFadeOut', indent: 700 }),
+
+        // FADE BACKGROUND TO NEW COLOR (IN)
+        new ScrollMagic.Scene({
+            triggerElement: ".about__title",
+            offset: aboutTitle.clientHeight/2,
+            reverse: true })
+            .setTween(aboutSceneStart)
+            .triggerHook(0.5)
+            .addIndicators({ name: 'aboutBackgroundIn', indent: 200, colorStart: 'red' }),
         
-        // FADE BACKGROUND TO NEW COLOR
+        // FADE BACKGROUND TO NEW COLOR (OUT)
         new ScrollMagic.Scene({
             triggerElement: ".about__title",
             offset: sectionAboutEnd + aboutTitle.clientHeight/2,
             reverse: true })
             .setTween(aboutSceneEnd)
             .triggerHook(0.5)
-            .addIndicators({ name: 'aboutTitlePinOut', indent: 200, colorStart: 'red' })
+            .addIndicators({ name: 'aboutBackgroundOut', indent: 200, colorStart: 'red' })
     );
 
     return aboutScenes;

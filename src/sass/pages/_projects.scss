@@ -1,12 +1,13 @@
+// CONTAINER FOR ALL SECTION-PROJECTS
 .projects {
-    max-width: $max-content-width;
-    margin: 0 auto;
+    // max-width: $max-content-width;
+    position: relative;
     display: flex;
     flex-direction: column;
-    position: relative;
+    overflow-x: scroll;
 
+    // PINNED BACKGROUND TITLE
     &__title {
-        position: relative;
         z-index: 1;
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;

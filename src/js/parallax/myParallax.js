@@ -17,7 +17,6 @@ import mathUtil from '../math-util';
     let rotate          = {},
         translate       = {},
         scale           = {},
-        opacity         = {},
         totalTransform  = {};
 
     // Only run if parallax elements exist
@@ -44,7 +43,7 @@ import mathUtil from '../math-util';
         let offsetTransPassiveX,        offsetTransPassiveY,
             offsetRotPassiveX,          offsetRotPassiveY,
             offsetScalePassiveX,        offsetScalePassiveY,
-            offsetOpacity, hasPassive,  hasActive;
+            hasPassive,  hasActive;
             
             [offsetRotPassiveX, offsetRotPassiveY] 
             = (!!element.dataset.parallaxRotatePassive) ? regexSeparation(element.dataset.parallaxRotatePassive) :  [NaN, NaN];
@@ -55,10 +54,7 @@ import mathUtil from '../math-util';
             [offsetScalePassiveX, offsetScalePassiveY] 
             = (!!element.dataset.parallaxScalePassive) ? regexSeparation(element.dataset.parallaxScalePassive) : [NaN, NaN];
 
-            offsetOpacity 
-            = (!!element.dataset.parallaxOpacity) ? regexSeparation(element.dataset.parallaxOpacity)[0] : NaN;
-
-            hasPassive = (!!element.dataset.parallaxRotatePassive || !!element.dataset.parallaxTranslatePassive || !!element.dataset.parallaxScalePassive || !!element.dataset.parallaxOpacity) ? true: false;
+            hasPassive = (!!element.dataset.parallaxRotatePassive || !!element.dataset.parallaxTranslatePassive || !!element.dataset.parallaxScalePassive) ? true: false;
 
             hasActive = (!!element.dataset.parallaxRotateActive || !!element.dataset.parallaxTranslateActive) ? true : false;
 
@@ -68,7 +64,6 @@ import mathUtil from '../math-util';
                 rotY:       element._gsTransform.rotationY.toFixed(5),  //    ||    y-rotation
                 scaleX:     element._gsTransform.scaleX.toFixed(5),     //    ||    x-scale
                 scaleY:     element._gsTransform.scaleY.toFixed(5),     //    ||    y-scale
-                opacity:    window.getComputedStyle(element).opacity,   //    ||    opacity
                 display:    window.getComputedStyle(element).display,   //    ||    display
 
                 // Parallax values from html dataset
@@ -80,7 +75,6 @@ import mathUtil from '../math-util';
                 ...(!!offsetTransPassiveY ? {offsetTransPassiveY: Number(offsetTransPassiveY)} : {}),
                 ...(!!offsetScalePassiveX ? {offsetScalePassiveX: Number(offsetScalePassiveX)} : {}),
                 ...(!!offsetScalePassiveY ? {offsetScalePassiveY: Number(offsetScalePassiveY)} : {}),
-                ...(!!offsetOpacity ? {offsetOpacity: Number(offsetOpacity)} : {}),
 
                 hasPassive: hasPassive,
                 hasActive: hasActive
@@ -125,7 +119,7 @@ import mathUtil from '../math-util';
             calculateActive(element);                
             calculateTotal();
             
-            if(element.hasActive && element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.5 && window.getComputedStyle(element.el.parentElement).visibility !== 'hidden') {
+            if(element.hasActive && element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && window.getComputedStyle(element.el).visibility !== 'hidden') {
                 TweenMax.to(element.el, 1, {
                     x: totalTransform.translateX,
                     y: totalTransform.translateY,
@@ -135,7 +129,6 @@ import mathUtil from '../math-util';
                     },
                     scaleX: totalTransform.scaleX,
                     scaleY: totalTransform.scaleY,
-                    autoAlpha: mathUtil.Clamp(opacity.passive, 0, 1),
                     ease: Power2.easeOut,
                     overwrite: 0
                 });
@@ -165,7 +158,7 @@ import mathUtil from '../math-util';
                 calculateTotal();
 
                 // Only triggers transforms if element is inside or below viewport
-                if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.5 && window.getComputedStyle(element.el.parentElement).visibility !== 'hidden') {
+                if(element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && window.getComputedStyle(element.el).visibility !== 'hidden') {
                     TweenMax.to(element.el, 0.3, {
                         x: totalTransform.translateX,
                         y: totalTransform.translateY,
@@ -175,7 +168,6 @@ import mathUtil from '../math-util';
                         },
                         scaleX: totalTransform.scaleX,
                         scaleY: totalTransform.scaleY,
-                        autoAlpha: mathUtil.Clamp(opacity.passive, 0, 1),
                         ease: Power0.easeOut,
                         overwrite: 2
                     })
@@ -197,9 +189,6 @@ import mathUtil from '../math-util';
         // Scroll Scale Amount
         scale.passiveX = !!element.offsetScalePassiveX && scroll.y !== 0 ? ((scroll.y/documentHeight+1) * (1+element.offsetScalePassiveX)).toFixed(5) : element.scaleX;
         scale.passiveY = !!element.offsetScalePassiveY && scroll.y !== 0 ? ((scroll.y/documentHeight+1) * (1+element.offsetScalePassiveY)).toFixed(5) : element.scaleY;
-
-        // Scroll Opacity Amount
-        opacity.passive = !!element.offsetOpacity ? (element.opacity - (scroll.y/documentHeight*100 * element.offsetOpacity)) : element.opacity;
     }
     
     // ACTIVE PARALLAX VALUES
@@ -228,7 +217,6 @@ import mathUtil from '../math-util';
 
     // RESET
     let resetTimeout = null;
-    let resetInit = 0;
     function reset() {
         if(resetTimeout){
             clearTimeout(resetTimeout);
@@ -239,7 +227,7 @@ import mathUtil from '../math-util';
                 calculatePassive(element);
                 calculateActive(element);      
                 
-                if((element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && opacity.passive > -0.5 && window.getComputedStyle(element.el.parentElement).visibility !== 'hidden') || resetInit === 0) {
+                if((element.el.getBoundingClientRect().bottom > 0 && element.el.getBoundingClientRect().top < viewport.y && window.getComputedStyle(element.el).visibility !== 'hidden')) {
                     TweenMax.to(element.el, .8, {
                         x: translate.passiveX,
                         y: translate.passiveY,
@@ -249,16 +237,11 @@ import mathUtil from '../math-util';
                         },
                         scaleX: scale.passiveX,
                         scaleY: scale.passiveX,
-                        autoAlpha: mathUtil.Clamp(opacity.passive, 0, 1),
                         ease: Quad.easeOut,
                         overwrite: 3
                     });
                 } 
             });
-
-            if(resetInit === 0) {
-                resetInit = 1;
-            }      
         }, 10);
     };
 })();

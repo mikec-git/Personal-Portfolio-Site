@@ -132,10 +132,13 @@ body {
   display: block;
   letter-spacing: 1.2rem;
   line-height: 2;
-  font-size: 7rem;
+  font-size: 8rem;
   text-transform: uppercase; }
 
 .noise {
+  position: fixed;
+  top: 0;
+  left: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -146,7 +149,8 @@ body {
   z-index: 0;
   background-color: #1F1F1F;
   -webkit-backface-visibility: hidden;
-  backface-visibility: hidden; }
+  backface-visibility: hidden;
+  opacity: 0.2; }
 
 .noise-body {
   position: fixed;
@@ -156,7 +160,66 @@ body {
   right: 0;
   z-index: 1;
   -webkit-backface-visibility: hidden;
-  backface-visibility: hidden; }
+  backface-visibility: hidden;
+  background-color: #1f1f1f; }
+
+.btn, .btn:link, .btn:visited {
+  display: inline-block;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: black;
+  background-color: yellow;
+  font-size: 1.6rem;
+  padding: 1.5rem 2.5rem;
+  border: none;
+  cursor: pointer; }
+
+.btn-info {
+  position: relative;
+  z-index: 2; }
+
+.carousel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  width: 200vw;
+  z-index: 1;
+  background-color: #aeeeee; }
+  .carousel__cta {
+    position: absolute;
+    top: 25%;
+    left: 0;
+    display: flex;
+    align-items: start;
+    flex-direction: column; }
+
+.carousel-item {
+  display: block;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: [project-start] 5rem [carousel-start] repeat(10, [col-start] 1fr [col-end]) [carousel-end] 5rem [project-end];
+  grid-template-rows: repeat(8, 1fr);
+  grid-auto-rows: min-content;
+  justify-items: center;
+  align-items: center;
+  height: calc(100% - 20rem);
+  width: calc(100vw - 10rem);
+  margin: 5rem 10rem;
+  background-color: #aaa; }
+  .carousel-item__img {
+    grid-column: carousel-start / carousel-end;
+    grid-row: 1 / -1;
+    display: block;
+    max-width: 100%;
+    width: 150rem;
+    box-shadow: 0 2rem 5rem 1rem rgba(0, 0, 0, 0.3); }
+  .carousel-item__name {
+    padding: 1rem 2rem;
+    background-color: gray;
+    display: inline-block;
+    z-index: 1; }
 
 .column-text {
   display: grid;
@@ -191,8 +254,8 @@ body {
   display: grid;
   justify-items: center;
   align-items: center;
-  top: 3rem;
-  left: 3rem;
+  top: 3.25rem;
+  left: 3.25rem;
   transition: all 250ms ease-out, background-color 150ms ease-in;
   cursor: pointer;
   opacity: 0;
@@ -206,7 +269,7 @@ body {
     display: block;
     width: 100%;
     height: 100%;
-    border: 1px #000 solid;
+    border: 2px #000 solid;
     transition: all 250ms ease-in; }
   .logo-box:hover {
     transform: rotateZ(45deg);
@@ -216,7 +279,7 @@ body {
 
 .logo {
   display: block;
-  padding: .2rem;
+  padding: .3rem .35rem .1rem;
   width: 100%;
   height: 100%; }
 
@@ -368,7 +431,8 @@ body::-webkit-resizer {
     position: relative;
     z-index: 1;
     -webkit-backface-visibility: hidden;
-    backface-visibility: hidden; }
+    backface-visibility: hidden;
+    opacity: 0.5; }
 
 .section-about {
   margin-top: -80rem;
@@ -387,13 +451,11 @@ body::-webkit-resizer {
   padding: 20rem 0; }
 
 .projects {
-  max-width: 110rem;
-  margin: 0 auto;
+  position: relative;
   display: flex;
   flex-direction: column;
-  position: relative; }
+  overflow-x: scroll; }
   .projects__title {
-    position: relative;
     z-index: 1;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden; }
