@@ -134,7 +134,24 @@ const projectsParallax = (function() {
             offset: carouselMid,
             duration: canvasImage.clientWidth,
             reverse: true })
-        .on('progress', e =>  requestAnimationFrame(start(e, 1)) )
+        .on('progress', e =>  {
+            requestAnimationFrame(() => {
+                start(e, 0);
+            });
+        })
+        .addIndicators({ name: 'IMG 1', colorStart: 'orange'}),
+
+        // CAROUSEL IMG SWAP 2
+        new ScrollMagic.Scene({
+            triggerElement: ".projects",
+            offset: carouselMid + canvasImage.clientWidth,
+            duration: canvasImage.clientWidth,
+            reverse: true })
+        .on('progress', e =>  {
+            requestAnimationFrame(() => {
+                start(e, 1);
+            });
+        })
         .addIndicators({ name: 'IMG 1', colorStart: 'orange'}),
 
         
