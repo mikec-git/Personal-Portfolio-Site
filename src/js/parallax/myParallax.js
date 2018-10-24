@@ -183,6 +183,8 @@ import mathUtil from '../math-util';
         rotate.passiveY = !!element.offsetRotPassiveY && scroll.y !== 0 ? (scroll.y * element.offsetRotPassiveY).toFixed(7) : element.rotY;
         
         // Scroll Translate Amount
+        // translate.passiveX  = !!element.offsetTransPassiveX && scroll.y !== 0 ? ((element.el.getBoundingClientRect().top + element.el.clientHeight/2 - viewport.y/2) * element.offsetTransPassiveX + element.x).toFixed(5) : element.x;
+        // translate.passiveY  = !!element.offsetTransPassiveY && scroll.y !== 0 ? ((element.el.getBoundingClientRect().top + element.el.clientHeight/2 - viewport.y/2) * element.offsetTransPassiveY + element.y).toFixed(5) : element.y;
         translate.passiveX  = !!element.offsetTransPassiveX && scroll.y !== 0 ? (scroll.y * element.offsetTransPassiveX + element.x).toFixed(5) : element.x;
         translate.passiveY  = !!element.offsetTransPassiveY && scroll.y !== 0 ? (scroll.y * element.offsetTransPassiveY + element.y).toFixed(5) : element.y;
     
@@ -194,8 +196,8 @@ import mathUtil from '../math-util';
     // ACTIVE PARALLAX VALUES
     function calculateActive(element) {
         // Mouse Rotate Amount
-        rotate.activeX  = !!element.offsetRotActive ? (-(mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive).toFixed(5) : 0;
-        rotate.activeY  = !!element.offsetRotActive ? ((mouse.x-viewport.x/2) / (viewport.x/2) * 45 * element.offsetRotActive).toFixed(5) : 0;
+        rotate.activeX  = !!element.offsetRotActive ? ((mouse.y-viewport.y/2) / (viewport.y/2) * 45 * element.offsetRotActive).toFixed(5) : 0;
+        rotate.activeY  = !!element.offsetRotActive ? (-(mouse.x-viewport.x/2) / (viewport.x/2) * 45 * element.offsetRotActive).toFixed(5) : 0;
         
         // Mouse Translate Amount
         translate.activeX   = !!element.offsetTransActive ? ((mouse.x - viewport.x/2) * element.offsetTransActive).toFixed(5) : 0;

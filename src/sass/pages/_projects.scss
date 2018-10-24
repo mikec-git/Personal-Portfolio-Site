@@ -4,12 +4,22 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    overflow-x: scroll;
+    padding-bottom: 100vw;
 
     // PINNED BACKGROUND TITLE
     &__title {
         z-index: 1;
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
+
+        &--2 {
+            z-index: 1;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
     }
 }
