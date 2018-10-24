@@ -4,7 +4,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    padding-bottom: 100vw;
+    padding-bottom: calc(90vw * 3 + 50vh * 3);
 
     // PINNED BACKGROUND TITLE
     &__title {

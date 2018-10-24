@@ -4,6 +4,7 @@ body::-webkit {
         width: .8rem;
         height: .8rem;
         background-color: $color-grey-light;
+        display: none;
         
         // Empty space below the progress bar
         &-track {

@@ -5,6 +5,7 @@ let canvas = document.querySelector('.carousel-item__img');
 let ctx;
 
 let imgList = ['../src/img/projects/yelpcamp_test.png', '../src/img/projects/project_test1.png', '../src/img/projects/project_test2.png', '../src/img/projects/project_test3.png'];
+let imgLength = imgList.length;
 let offCanvasList = {};
 let canvasDim;
 
@@ -59,8 +60,10 @@ function start(e, imgNum) {
             xPos, 0, canvasDim.x, canvasDim.y, 
             xPos, 0, canvasDim.x, canvasDim.y);
     
-        ctx.fillRect(xPos, 0, 5, canvasDim.y);
+        if(progress > 0 && progress < 1) {
+            ctx.fillRect(xPos, 0, 5, canvasDim.y);
+        }
     }
 }    
 
-export { start };
+export { start, imgLength };

@@ -12,12 +12,11 @@ const headerParallax = (function() {
         headerMainTitle     = document.querySelector('.header__main-title'),
         headerSecondaryTitle = document.querySelector('.header__secondary-title');
         
+    // INCLUDES ALL THE OPACITY FADE COMPONENTS IN THE HEADER
     let headerOpacityComponents 
     = [headerFirstName, headerLastName, headerDescription, ...headerLetter, headerLogo, headerMainTitle, headerSecondaryTitle, headerLogoBox];
 
     let headerScenes = [];
-
-    // INCLUDES ALL THE OPACITY FADE COMPONENTS IN THE HEADER
 
     // TOP CORNER LOGO
     let cornerLogoTween = TweenMax.to(cornerLogo, 0.5, {

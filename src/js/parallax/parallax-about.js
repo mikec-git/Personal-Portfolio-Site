@@ -9,15 +9,19 @@ const aboutParallax = (function() {
 
     let aboutScenes = [];
 
-    let aboutPaddingBottom = regex.exec(window.getComputedStyle(sectionAbout).paddingBottom) || regex.exec(window.getComputedStyle(sectionAbout).padding)[0];
+    let aboutPaddingBottom = regex.exec(window.getComputedStyle(sectionAbout).paddingBottom) || regex.exec                                    (window.getComputedStyle(sectionAbout).padding)[0];
     let sectionAboutEnd    = aboutMain.clientHeight + Number(aboutPaddingBottom);    
     
     let aboutTitleFadeIn    = new TweenMax.from(aboutTitle, 0.000001, { autoAlpha: 0 });
     let aboutTitleFadeOut   = new TweenMax.to(aboutTitle, 0.000001, { autoAlpha: 0 }); 
-    let aboutSceneStart = new TweenMax.to(noiseContainer, 0.4,{ backgroundColor: '#aaa', ease: Quad.easeIn });
-    let aboutSceneEnd   = new TweenMax.to(noiseContainer, 0.4,{ backgroundColor: '#111', ease: Quad.easeIn });
+    let aboutSceneStart     = new TweenMax.to(noiseContainer, 0.4,{ backgroundColor: '#aaa', ease: Quad.easeIn });
+    let aboutSceneEnd       = new TweenMax.to(noiseContainer, 0.4,{ backgroundColor: '#111', ease: Quad.easeIn });
 
     aboutScenes.push(
+        // =============================================================== //
+        //                          ABOUT TITLE                            //
+        // =============================================================== //
+
         // PIN ABOUT TITLE
         new ScrollMagic.Scene({
             triggerElement: ".about__title", 
@@ -45,6 +49,10 @@ const aboutParallax = (function() {
             .setTween(aboutTitleFadeOut)
             .triggerHook(0.5)
             .addIndicators({ name: 'titleFadeOut', indent: 700 }),
+
+        // =============================================================== //
+        //                        BACKGROUND COLOR                         //
+        // =============================================================== //
 
         // FADE BACKGROUND TO NEW COLOR (IN)
         new ScrollMagic.Scene({

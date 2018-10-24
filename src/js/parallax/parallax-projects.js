@@ -1,45 +1,93 @@
 import { regex, viewport } from './parallax-config';
-import { start } from '../carousel';
+import { start, imgLength } from '../carousel';
+import { smCtrlV } from './parallax-controller';
+
+window.addEventListener('resize', onPageResize, false);
+
+const sectionProjects = document.querySelector('.section-projects'),
+      projectsMain    = document.querySelector('.projects'),
+      projectsTitle   = document.querySelector('.projects__title'),
+      carousel        = document.querySelector('.carousel'),
+      marginBottomLg  = document.querySelector('.u-mb-large'),          
+      noiseContainer  = document.querySelector('.noise-body');
+
+const projectsTitleFadeIn1        = new TweenMax.from(projectsTitle, 0.000001, { autoAlpha: 0 }),
+      projectsTitleFadeOut1       = new TweenMax.to(projectsTitle, 0.000001, { autoAlpha: 0 }),  
+      backgroundColorSlideChange1 = new TweenMax.to(noiseContainer, 0.75, { backgroundColor: '#AEEEEE' }),
+      backgroundColorSlideChange2 = new TweenMax.to(noiseContainer, 0.75, { backgroundColor: '#BDD9C0' }),
+      backgroundColorSlideChange3 = new TweenMax.to(noiseContainer, 0.75, { backgroundColor: '#D2D2D2' });
+
+let projectsScenes      = projectScenesArrayNoReset(),
+    resetScenes         = projectScenesArrayReset(),
+    projectsParallax    = [...projectsScenes, ...resetScenes];
+
+let resetTimeout = null;
 
 // PROJECTS SECTION
-const projectsParallax = (function() {
+function projectScenesArrayNoReset() {
     let projectsScenes = [];
 
-    const sectionProjects = document.querySelector('.section-projects'),
-          projectsMain    = document.querySelector('.projects'),
-          projectsTitle   = document.querySelector('.projects__title'),
-          projectsTitle2  = document.querySelector('.projects__title--2'),
-          carousel        = document.querySelector('.carousel'),
-          marginBottomLg  = document.querySelector('.u-mb-large'),          
-          noiseContainer  = document.querySelector('.noise-body'),
-          canvasImage     = document.querySelector('.carousel-item__img'),
-          cta             = document.querySelector('.carousel__cta');
-
-    let sectionProjectsStyle    = window.getComputedStyle(sectionProjects),
-        marginBottomLgStyle     = window.getComputedStyle(marginBottomLg),
-        carouselStyle           = window.getComputedStyle(carousel),
-        projectsMainHeight      = projectsMain.clientHeight,
+    let marginBottomLgStyle     = window.getComputedStyle(marginBottomLg),
         projectsTitleHeight     = projectsTitle.clientHeight,
         carouselHeight          = carousel.clientHeight;
 
-    let projectsSectionPaddingTop 
-    = sectionProjectsStyle.paddingTop.match(regex) || sectionProjectsStyle.padding.match(regex)[0];
-    let sectionProjectsEnd      
-    =  projectsMainHeight + Number(projectsSectionPaddingTop);
-    let carouselFromPaddingTop  
-    = projectsTitleHeight + Number(marginBottomLgStyle.marginBottom.match(regex));
-    let carouselMid 
-    = carouselFromPaddingTop + carouselHeight/2;
-    
-    let projectsTitleFadeIn1     = new TweenMax.from(projectsTitle, 0.000001, { autoAlpha: 0 });
-    let projectsTitleFadeOut1    = new TweenMax.to(projectsTitle, 0.000001, { autoAlpha: 0 });
-    let backgroundColorSlideChange = new TweenMax.to(noiseContainer, 0.5, { backgroundColor: '#AEEEEE' });
-    let projectsTitleFadeIn2    = new TweenMax.from(projectsTitle2, 0.000001, { autoAlpha: 0 });    
-    let projectsTitleFadeOut2   = new TweenMax.to(projectsTitle2, 0.000001, { autoAlpha: 0 });
-    let projectsTitleY2         = new TweenMax.from(projectsTitle2, 0.000001, { top: carouselFromPaddingTop});
+    let carouselFromPaddingTop  = projectsTitleHeight + Number(marginBottomLgStyle.marginBottom.match(regex)),  
+        carouselMid             = carouselFromPaddingTop + carouselHeight/2;    
 
     projectsScenes.push(
-        // TITLE FADE IN 1
+        // =============================================================== //
+        //                       BACKGROUND COLOR                          //
+        // =============================================================== //
+        // BG COLOR CHANGE 1
+        new ScrollMagic.Scene({
+            triggerElement: ".projects__title",
+            offset: carouselMid,
+            reverse: true })
+        .triggerHook(0.5)
+        .setTween(backgroundColorSlideChange1)
+        .addIndicators({ name: 'bgColorChange', colorStart: 'green'}),
+
+        // BG COLOR CHANGE 2
+        new ScrollMagic.Scene({
+            triggerElement: ".projects__title",
+            offset: carouselMid + viewport.x*0.9 + viewport.y*.5*2,
+            reverse: true })
+        .triggerHook(0.5)
+        .setTween(backgroundColorSlideChange2)
+        .addIndicators({ name: 'bgColorChange', colorStart: 'green'}),
+
+        // BG COLOR CHANGE 3
+        new ScrollMagic.Scene({
+            triggerElement: ".projects__title",
+            offset: carouselMid + viewport.x*0.9*2 + viewport.y*.5*3,
+            reverse: true })
+        .triggerHook(0.5)
+        .setTween(backgroundColorSlideChange3)
+        .addIndicators({ name: 'bgColorChange', colorStart: 'green'})        
+    );
+
+    return projectsScenes;
+};
+
+function projectScenesArrayReset() {
+    let resetScenes = [];
+
+    let sectionProjectsStyle    = window.getComputedStyle(sectionProjects),
+        marginBottomLgStyle     = window.getComputedStyle(marginBottomLg);
+
+    let projectsMainHeight      = projectsMain.clientHeight,
+        projectsTitleHeight     = projectsTitle.clientHeight,
+        carouselHeight          = carousel.clientHeight;
+
+    let projectsSectionPaddingTop = sectionProjectsStyle.paddingTop.match(regex) || sectionProjectsStyle.padding.match(regex)[0],    sectionProjectsEnd        = projectsMainHeight + Number(projectsSectionPaddingTop),
+        carouselFromPaddingTop    = projectsTitleHeight + Number(marginBottomLgStyle.marginBottom.match(regex)),
+        carouselMid               = carouselFromPaddingTop + carouselHeight/2;    
+
+    resetScenes.push(       
+        // =============================================================== //
+        //                         PROJECT TITLE                           //
+        // =============================================================== //
+        // // TITLE FADE IN 1
         new ScrollMagic.Scene({
             triggerElement: ".projects__title",
             offset: projectsTitleHeight/2,
@@ -48,116 +96,70 @@ const projectsParallax = (function() {
         .triggerHook(0.5)
         .addIndicators({ name: 'projectsTitleIn1', indent: 100 }),
 
-        // TITLE FADE OUT 1
+        // // TITLE FADE OUT 1
         new ScrollMagic.Scene({
             triggerElement: ".projects__title",
-            // offset: carouselMid - projectsTitleHeight/6,
-            // offset: carouselMid,
             offset: sectionProjectsEnd,
             reverse: true })
         .setTween(projectsTitleFadeOut1)
         .triggerHook(0.5)
         .addIndicators({ name: 'projectsTitleOut1', indent: 200, colorStart: 'red' }),
-       
-        // TITLE FADE IN 2
-        // new ScrollMagic.Scene({
-        //     triggerElement: ".projects",
-        //     offset: carouselMid - projectsTitleHeight/6,
-        //     reverse: true })
-        // .setTween(projectsTitleFadeIn2)
-        // .triggerHook(0.5)
-        // .addIndicators({ name: 'projectsTitleIn2', indent: 100 }),
-
-        // TITLE FADE OUT 2
-        // new ScrollMagic.Scene({
-        //     triggerElement: ".projects",
-        //     offset: projectsMainHeight + projectsTitleHeight/2,
-        //     reverse: true })
-        // .setTween(projectsTitleFadeOut2)
-        // .triggerHook(0.5)
-        // .addIndicators({ name: 'projectsTitleOut2', indent: 200, colorStart: 'red' }),
-
-        // TITLE2 Y
-        // new ScrollMagic.Scene({
-        //     triggerElement: ".projects__title", 
-        //     offset: projectsTitleHeight/2,
-        //     duration: carouselFromPaddingTop,
-        //     reverse: true })
-        // .triggerHook(0.5)
-        // .setTween(projectsTitleY2)
-        // .addIndicators({ name: 'projectsTitlePin', indent: 400}),
 
         // TITLE PIN
         new ScrollMagic.Scene({
             triggerElement: ".projects__title", 
             offset: projectsTitleHeight/2,
-            // duration: carouselFromPaddingTop,
-            // duration: carouselMid,
             duration: sectionProjectsEnd - projectsTitleHeight/2,
             reverse: true })
         .triggerHook(0.5)
         .setPin(".projects__title", {pushFollowers: false})
         .addIndicators({ name: 'projectsTitlePin', indent: 400}),
-        
-        // // SECOND PIN FOR TITLE
-        // new ScrollMagic.Scene({
-        //     triggerElement: ".projects",
-        //     offset: carouselMid - projectsTitleHeight/6,
-        //     duration: projectsMainHeight,
-        //     reverse: true })
-        // .setPin('.projects__title--2', {pushFollowers: false})
-        // .addIndicators({ name: 'rePinTitle', colorStart: 'blue', indent: 400}),
 
-        // BG COLOR CHANGE PER SLIDE
-        new ScrollMagic.Scene({
-            triggerElement: ".projects__title",
-            // offset: carouselMid - carouselHeight/6,
-            offset: carouselMid,
-            reverse: true })
-        .triggerHook(0.5)
-        .setTween(backgroundColorSlideChange)
-        .addIndicators({ name: 'bgColorChange', colorStart: 'green'}),
-
+        // =============================================================== //
+        //                        CAROUSEL START                           //
+        // =============================================================== //
         // CAROUSEL PIN FOR DURATION OF HORIZONTAL SCROLLING
         new ScrollMagic.Scene({
             triggerElement: ".projects",
-            // offset: carouselMid - projectsTitleHeight/6,
             offset: carouselMid,
-            duration: projectsMainHeight - carouselMid,
+            duration: viewport.x*0.9*3 + viewport.y*.5*3,
             reverse: true })
         .setPin('.carousel', {pushFollowers: false})
         .addIndicators({ name: 'pinProjects', colorStart: 'blue'}),
-        
-        // CAROUSEL IMG SWAP 1
-        new ScrollMagic.Scene({
-            triggerElement: ".projects",
-            offset: carouselMid,
-            duration: canvasImage.clientWidth,
-            reverse: true })
-        .on('progress', e =>  {
-            requestAnimationFrame(() => {
-                start(e, 0);
-            });
-        })
-        .addIndicators({ name: 'IMG 1', colorStart: 'orange'}),
-
-        // CAROUSEL IMG SWAP 2
-        new ScrollMagic.Scene({
-            triggerElement: ".projects",
-            offset: carouselMid + canvasImage.clientWidth,
-            duration: canvasImage.clientWidth,
-            reverse: true })
-        .on('progress', e =>  {
-            requestAnimationFrame(() => {
-                start(e, 1);
-            });
-        })
-        .addIndicators({ name: 'IMG 1', colorStart: 'orange'}),
-
-        
     );
+    
+    // =============================================================== //
+    //                        CAROUSEL WIPE                            //
+    // =============================================================== //
+    for(let i = 0; i < imgLength-1; i++) {
+        resetScenes.push(
+            new ScrollMagic.Scene({
+                triggerElement: ".projects",
+                offset: carouselMid + viewport.x*0.9*i + viewport.y*0.5*(i+1),
+                duration: viewport.x*0.9,
+                reverse: true })
+            .on('progress', e =>  { requestAnimationFrame(() => start(e, i)); })
+            .addIndicators({ name: `IMG ${i+1}`})
+        )
+    }
 
-    return projectsScenes;
-})();
+    return resetScenes;
+};
+
+function onPageResize() {
+    if(resetTimeout) {
+        clearTimeout(resetTimeout);
+    }
+
+    resetTimeout = setTimeout(() => {
+        resetScenes.forEach(scene => {
+            scene.remove();
+            scene.destroy(true);
+        });
+        
+        resetScenes = projectScenesArrayReset();
+        smCtrlV.addToCtrl(resetScenes);
+    }, 400);
+}
 
 export { projectsParallax };

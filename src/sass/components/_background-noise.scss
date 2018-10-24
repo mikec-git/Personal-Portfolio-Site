@@ -10,7 +10,7 @@
     background-color: $color-grey-darker;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    opacity: 0.2;
+    opacity: 0.3;
     
     
 }
@@ -24,5 +24,6 @@
     z-index: 1;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    background-color: rgb(31, 31, 31)
+    // background-color: rgb(31, 31, 31);
+    background-color: #111;
 }

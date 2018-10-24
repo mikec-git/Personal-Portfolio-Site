@@ -1,5 +1,5 @@
 (function startSmoothScroll() {    
-    const scrollDist = Number(350); // Increase for greater distance
+    const scrollDist = Number(450); // Increase for greater distance
     const scrollDuration = .45;     // Increase for longer scroll
     
     window.addEventListener('mousewheel', scroll, false);
