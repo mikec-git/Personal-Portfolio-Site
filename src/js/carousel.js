@@ -47,12 +47,12 @@ function generateCanvas(canvasX, canvasY) {
 // FUNCTION THAT DRAWS THE IMAGES ONTO THE CANVAS BASED ON SCROLL POS
 function start(e, imgNum) {
     if(!!e && Object.keys(offCanvasList).length === imgList.length && offCanvasList.constructor === Object) {
-        let progress = e.progress.toFixed(4);
+        let progress = Number(e.progress.toFixed(4));
         let xPos = canvasDim.x - canvasDim.x * progress;
     
         ctx.clearRect(0, 0, canvasDim.x, canvasDim.y);
-        
-        ctx.drawImage(offCanvasList[imgList[imgNum]], 
+
+        ctx.drawImage(offCanvasList[imgList[imgNum]],
             0, 0, xPos, canvasDim.y,
             0, 0, xPos, canvasDim.y);
 

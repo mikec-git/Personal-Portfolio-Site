@@ -1,4 +1,4 @@
-import { regex, viewport } from './parallax-config';
+import { viewport } from './parallax-config';
 
 const headerParallax = (function() {
     let cornerLogo          = document.querySelector('.logo-box'),

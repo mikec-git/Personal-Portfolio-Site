@@ -2,12 +2,11 @@ import { regex, viewport } from './parallax-config';
 import { start, imgLength } from '../carousel';
 import { smCtrlV } from './parallax-controller';
 
-window.addEventListener('resize', onPageResize, false);
-
 const sectionProjects = document.querySelector('.section-projects'),
       projectsMain    = document.querySelector('.projects'),
       projectsTitle   = document.querySelector('.projects__title'),
       carousel        = document.querySelector('.carousel'),
+      carouselImg     = document.querySelector('.carousel-item__img'),
       marginBottomLg  = document.querySelector('.u-mb-large'),          
       noiseContainer  = document.querySelector('.noise-body');
 
@@ -22,6 +21,14 @@ let projectsScenes      = projectScenesArrayNoReset(),
     projectsParallax    = [...projectsScenes, ...resetScenes];
 
 let resetTimeout = null;
+
+window.addEventListener('resize', onPageResize, false);
+window.addEventListener('DOMContentLoaded', onStart, false);
+
+
+function onStart() {
+    smCtrlV.addToCtrl(projectsParallax);
+}
 
 // PROJECTS SECTION
 function projectScenesArrayNoReset() {
@@ -116,13 +123,13 @@ function projectScenesArrayReset() {
         .addIndicators({ name: 'projectsTitlePin', indent: 400}),
 
         // =============================================================== //
-        //                        CAROUSEL START                           //
+        //                         CAROUSEL PIN                            //
         // =============================================================== //
         // CAROUSEL PIN FOR DURATION OF HORIZONTAL SCROLLING
         new ScrollMagic.Scene({
             triggerElement: ".projects",
             offset: carouselMid,
-            duration: viewport.x*0.9*3 + viewport.y*.5*3,
+            duration: viewport.x*0.9*3 + viewport.y*0.5*3 + viewport.x*0.4*2,
             reverse: true })
         .setPin('.carousel', {pushFollowers: false})
         .addIndicators({ name: 'pinProjects', colorStart: 'blue'}),
@@ -135,8 +142,8 @@ function projectScenesArrayReset() {
         resetScenes.push(
             new ScrollMagic.Scene({
                 triggerElement: ".projects",
-                offset: carouselMid + viewport.x*0.9*i + viewport.y*0.5*(i+1),
-                duration: viewport.x*0.9,
+                offset: carouselMid + viewport.x*0.9*(i) + viewport.y*0.5*(i+1),
+                duration: viewport.x*0.3,
                 reverse: true })
             .on('progress', e =>  { requestAnimationFrame(() => start(e, i)); })
             .addIndicators({ name: `IMG ${i+1}`})
@@ -146,6 +153,7 @@ function projectScenesArrayReset() {
     return resetScenes;
 };
 
+// RESETS POSITIONING UPON DOCUMENT RESIZE
 function onPageResize() {
     if(resetTimeout) {
         clearTimeout(resetTimeout);
@@ -161,5 +169,3 @@ function onPageResize() {
         smCtrlV.addToCtrl(resetScenes);
     }, 400);
 }
-
-export { projectsParallax };
